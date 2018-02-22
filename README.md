@@ -6,7 +6,7 @@ _Student Id_: 842309
 
 _Name_: Dheeraj Agrawal
 
-# Tasks - 16/02/2018
+### Tasks - 16/02/2018
 - [ ] Write a 300 words draft project outline
 - [ ] Set up **testrpc** local blockchain
 - [ ] Set up **traffle** enviornment to commitsmart contracts
