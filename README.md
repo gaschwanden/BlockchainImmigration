@@ -14,3 +14,6 @@ This is the main module which will have the documents for the project in ``docs`
 - [x] Set up **traffle** enviornment to commitsmart contracts
 - [x] JS test environment for debugging 
 - [x] Timeline/Milestone for goals to achieve
+
+### Check
+https://www.youtube.com/watch?v=pEP2jlV5qEo BAT (Basic Attention Token)
