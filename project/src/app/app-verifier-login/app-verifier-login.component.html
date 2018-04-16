@@ -1,0 +1,15 @@
+<app-navbar></app-navbar>
+<div class="container">
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <form #loginFrm="ngForm" (ngSubmit)="onClickSubmit(loginFrm.value)">
+        <div class="form-group">
+          <label for="ethAddress">ETH Address (ERC-20 Compatible):</label>
+          <input type="email" class="form-control" id="ethAddress">
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
+      </form>
+    </div>
+  </div>
+
+</div>
