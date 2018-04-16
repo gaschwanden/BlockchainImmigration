@@ -6,6 +6,10 @@ contract Artifact {
     string public url;
     bool isVerified;
     address public verifier;
+    string type; //FIXME this should be an enum
+
+    //TODO store the image hash
+
 
     // modifiers
     modifier onlyByOwner {
