@@ -1,18 +1,16 @@
 import {Directive} from '@angular/core';
 import {AbstractControl, NG_VALIDATORS, Validator} from "@angular/forms";
-import {AppWeb3UtilsService} from "../app-service/app-web3-utils.service";
+import {AppWeb3Service} from "../app-service/app-web3.service";
 
 @Directive({
   selector: '[invalidEthAddress]',
   providers: [{provide: NG_VALIDATORS, useExisting: EthAddressValidatorDirective, multi: true}]
 })
 export class EthAddressValidatorDirective implements Validator {
-  constructor(private appWeb3UtilsSvc: AppWeb3UtilsService) {
+  constructor(private appWeb3Svc: AppWeb3Service) {
   }
 
   validate(control: AbstractControl): { [key: string]: any } {
-    console.log("Validating: " + control.value);
-    return this.appWeb3UtilsSvc.isAddress(control.value) ?
-      {'invalidEthAddress': {value: control.value}} : null;
+    return this.appWeb3Svc.isAddress(control.value) ? null : {'invalidEthAddress': {value: control.value}};
   }
 }

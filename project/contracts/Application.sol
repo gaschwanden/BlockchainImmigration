@@ -6,7 +6,7 @@ import "./Visa.sol";
 contract Application {
     address public owner;
     Artifact[] artifacts;
-    bool isApproved;
+  bool approved;
     Visa visa;
 
     // modifiers
@@ -16,15 +16,22 @@ contract Application {
     }
     modifier artifactsVerified {
         for (uint i = 0; i < artifacts.length; i++) {
-            if (!artifacts[i].isVerified) throw;
+          if (artifacts[i].verified() == false) throw;
             _;
         }
     }
 
     // constructors
-    function Application(Artifact[] _artifacts) public {
+  function Application() public {
         owner = msg.sender;
-        artifacts = _artifacts;
+  }
+
+  function setVisa(Visa _visa) {
+    visa = _visa;
+  }
+
+  function setArtifacts(Artifact[] _artifacts) public {
+    artifacts = _artifacts;
     }
 
     function getAllArtifacts() public constant returns (Artifact[]) {
@@ -32,11 +39,11 @@ contract Application {
     }
 
     function isApproved() public constant returns (bool) {
-        return isApproved;
+      return approved;
     }
 
-    function artifactsVerified(bool _isApproved) public onlyByOwner artifactsVerified {
-        isApproved = _isApproved;
+  function isArtifactsVerified(bool _approved) public onlyByOwner artifactsVerified {
+    approved = _approved;
     }
 
 }

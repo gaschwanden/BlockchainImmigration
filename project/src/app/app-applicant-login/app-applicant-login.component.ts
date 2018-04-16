@@ -1,19 +1,18 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-app-applicant',
   templateUrl: './app-applicant-login.component.html',
   styleUrls: ['./app-applicant-login.component.css']
 })
-export class AppApplicantLoginComponent implements OnInit {
-  constructor() {
-  }
-
-  ngOnInit() {
+export class AppApplicantLoginComponent {
+  constructor(private router: Router) {
   }
 
   onClickSubmit(data) {
-    alert("Entered ETH Address : " + data.ethAddress);
+    localStorage.setItem('ethAddress', data.ethAddress);
+    this.router.navigateByUrl('/applicant/' + data.ethAddress + '/documents');
   }
 
 }
