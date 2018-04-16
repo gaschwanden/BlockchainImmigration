@@ -12,16 +12,22 @@ import {AppImmigrationLoginComponent} from './app-immigration-login/app-immigrat
 import {AppHomeComponent} from './app-home/app-home.component';
 import {AppApplicantRegisterComponent} from './app-applicant-register/app-applicant-register.component';
 import {AppWeb3Service} from "./app-service/app-web3.service";
-import {AppWeb3UtilsService} from "./app-service/app-web3-utils.service";
 import {EthAddressValidatorDirective} from "./app-validators/eth-address-validator.directive";
+import {AppApplicantDocumentsComponent} from "./app-applicant-documents/app-applicant-documents.component";
 
 const APP_ROUTES: Routes = [
   {path: '', component: AppHomeComponent},
+  // applicant routes
   {path: 'applicant', component: AppApplicantLoginComponent},
   {path: 'applicant/register', component: AppApplicantRegisterComponent},
-
+  {path: 'applicant/:ethAddress/documents', component: AppApplicantDocumentsComponent},
+  {path: 'applicant/:ethAddress/applications', component: AppApplicantDocumentsComponent},
+  // verifier routes
   {path: 'verifier', component: AppVerifierLoginComponent},
+  {path: 'verifier/:ethAddress/documents', component: AppApplicantDocumentsComponent},
+  // immigration routes
   {path: 'immigration', component: AppImmigrationLoginComponent},
+  {path: 'immigration/:ethAddress/applications', component: AppApplicantDocumentsComponent},
 ];
 
 const COMPONENTS = [
@@ -32,6 +38,7 @@ const COMPONENTS = [
   AppImmigrationLoginComponent,
   AppHomeComponent,
   AppApplicantRegisterComponent,
+  AppApplicantDocumentsComponent,
   EthAddressValidatorDirective
 ];
 
@@ -46,7 +53,6 @@ const IMPORTS = [
 
 const PROVIDERS = [
   AppWeb3Service,
-  AppWeb3UtilsService,
 ];
 
 const BOOTSTRAP = [AppComponent];

@@ -1,13 +1,13 @@
 import {Injectable} from '@angular/core';
 import {environment} from '../../environments/environment';
-import Web3 from "web3";
+import * as Web3 from 'web3';
 
 declare var window: any;
 
 @Injectable()
 export class AppWeb3Service {
-
   public web3: Web3;
+
   checkAndInstantiateWeb3 = () => {
     // Checking if Web3 has been injected by the browser (Mist/MetaMask)
     if (typeof window.web3 !== 'undefined') {
@@ -26,6 +26,13 @@ export class AppWeb3Service {
       );
     }
   };
+
+  isAddress(ethAddress: string): boolean {
+    if (this.web3) {
+      return this.web3.isAddress(ethAddress);
+    }
+    return false
+  }
 
   constructor() {
     this.checkAndInstantiateWeb3();
