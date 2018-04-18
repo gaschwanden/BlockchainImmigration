@@ -10,10 +10,17 @@ contract Artifact {
 
   //TODO store the image hash
 
+  //events
+  event NotifyVerifier(address _artifact, address _verifier);
 
   // modifiers
   modifier onlyByOwner {
-    if (msg.sender != owner) throw;
+    if (msg.sender != owner) revert();
+    _;
+  }
+
+  modifier onlyByVerifier {
+    if (verifier > 0 && verifier != msg.sender) revert();
     _;
   }
 
@@ -22,15 +29,24 @@ contract Artifact {
     owner = msg.sender;
   }
 
+  function transferOwnership(address _newOwner) public onlyByOwner {
+    owner = _newOwner;
+  }
+
   function setUrl(string _url) public onlyByOwner {
     url = _url;
   }
 
-  function getUrl() public constant returns (string) {
+  function getUrl() public constant onlyByOwner onlyByVerifier returns (string) {
     return url;
   }
 
-  function verify(address _verifier, bool _verified) {
+  function setVerifier(address _verifier) public onlyByOwner {
+    verifier = _verifier;
+    NotifyVerifier(address(this), verifier);
+  }
+
+  function verify(address _verifier, bool _verified) public onlyByVerifier {
     verifier = _verifier;
     verified = _verified;
   }

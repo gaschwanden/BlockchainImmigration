@@ -1,16 +1,19 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-app-immigration',
   templateUrl: './app-immigration-login.component.html',
   styleUrls: ['./app-immigration-login.component.css']
 })
-export class AppImmigrationLoginComponent implements OnInit {
+export class AppImmigrationLoginComponent {
 
-  constructor() {
+  constructor(private router: Router) {
   }
 
-  ngOnInit() {
+  onClickSubmit(data) {
+    localStorage.setItem('ethAddress', data.ethAddress);
+    this.router.navigateByUrl('/immigration/' + data.ethAddress + '/applications');
   }
 
 }

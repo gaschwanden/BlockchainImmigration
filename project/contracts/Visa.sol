@@ -2,21 +2,31 @@ pragma solidity ^0.4.19;
 
 
 contract Visa {
-    address public immigrationDept;
+  address owner;
   string public visaType;
-    address[] public verifiers;
-    //TODO 100 point check
-    //TODO set of document types
+  //TODO 100 point check
+  //TODO set of document types
 
-    // modifiers
-    modifier onlyByOwner {
-        if (msg.sender != immigrationDept) throw;
-        _;
-    }
+  // modifiers
+  modifier onlyByOwner {
+    if (msg.sender != owner) revert();
+    _;
+  }
 
-    // constructors
-  function Visa(string _visaType, address[] _verifiers) public {
+  // constructors
+  function Visa() public {
+    owner = msg.sender;
+  }
+
+  function setVisaType(string _visaType) public onlyByOwner {
     visaType = _visaType;
-        verifiers = _verifiers;
-    }
+  }
+
+  function setVerifiers(address[] _verifiers) public onlyByOwner {
+    verifiers = _verifiers;
+  }
+
+  function transferOwnership(address _newOwner) public onlyByOwner {
+    owner = _newOwner;
+  }
 }

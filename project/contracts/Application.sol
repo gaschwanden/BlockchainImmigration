@@ -4,46 +4,50 @@ import "./Artifact.sol";
 import "./Visa.sol";
 
 contract Application {
-    address public owner;
-    Artifact[] artifacts;
+  address public owner;
+  Artifact[] artifacts;
   bool approved;
-    Visa visa;
+  Visa visa;
 
-    // modifiers
-    modifier onlyByOwner {
-        if (msg.sender != owner) throw;
-        _;
+  // modifiers
+  modifier onlyByOwner {
+    if (msg.sender != owner) revert();
+    _;
+  }
+  modifier artifactsVerified {
+    for (uint i = 0; i < artifacts.length; i++) {
+      if (artifacts[i].verified() == false) revert();
+      _;
     }
-    modifier artifactsVerified {
-        for (uint i = 0; i < artifacts.length; i++) {
-          if (artifacts[i].verified() == false) throw;
-            _;
-        }
-    }
-
-    // constructors
-  function Application() public {
-        owner = msg.sender;
   }
 
-  function setVisa(Visa _visa) {
+  // constructors
+  function Application() public {
+    owner = msg.sender;
+  }
+
+  function transferOwnership(address _newOwner) public onlyByOwner {
+    owner = _newOwner;
+  }
+
+  function setVisa(Visa _visa) public onlyByOwner {
     visa = _visa;
   }
 
-  function setArtifacts(Artifact[] _artifacts) public {
+  function setArtifacts(Artifact[] _artifacts) public onlyByOwner {
     artifacts = _artifacts;
-    }
+  }
 
-    function getAllArtifacts() public constant returns (Artifact[]) {
-        return artifacts;
-    }
+  function getAllArtifacts() public onlyByOwner constant returns (Artifact[]) {
+    return artifacts;
+  }
 
-    function isApproved() public constant returns (bool) {
-      return approved;
-    }
+  function isApproved() public onlyByOwner constant returns (bool) {
+    return approved;
+  }
 
   function isArtifactsVerified(bool _approved) public onlyByOwner artifactsVerified {
     approved = _approved;
-    }
+  }
 
 }

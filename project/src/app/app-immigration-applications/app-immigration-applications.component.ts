@@ -2,11 +2,11 @@ import {Component, OnInit} from '@angular/core';
 import {AppWeb3ApplicationService} from "../app-service/app-web3-application.service";
 
 @Component({
-  selector: 'app-app-applicant-applications',
-  templateUrl: './app-applicant-applications.component.html',
-  styleUrls: ['./app-applicant-applications.component.css']
+  selector: 'app-app-immigration-applications',
+  templateUrl: './app-immigration-applications.component.html',
+  styleUrls: ['./app-immigration-applications.component.css']
 })
-export class AppApplicantApplicationsComponent implements OnInit {
+export class AppImmigrationApplicationsComponent implements OnInit {
   applications = [];
   ethAddress: string;
 
@@ -26,15 +26,5 @@ export class AppApplicantApplicationsComponent implements OnInit {
           this.applications = [];
         });
   }
-
-  onCreateClick() {
-    this.appWeb3ApplicationSvc
-      .create(this.ethAddress)
-      .subscribe(
-        application => {
-          this.applications.push(application);
-        },
-        error => console.error("Unable to create new application for: " + this.ethAddress, error));
-  }
-
 }
+

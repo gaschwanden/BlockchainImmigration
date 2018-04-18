@@ -27,6 +27,10 @@ export class AppWeb3Service {
     }
   };
 
+  currentProvider() {
+    return this.web3.currentProvider;
+  }
+
   isAddress(ethAddress: string): boolean {
     if (this.web3) {
       return this.web3.isAddress(ethAddress);

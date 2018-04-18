@@ -1,17 +1,17 @@
 import {Injectable} from '@angular/core';
 import {AppWeb3Service} from "./app-web3.service";
 
-import * as Artifact from '../../../build/contracts/Artifact.json';
-import * as ArtifactFactory from '../../../build/contracts/ArtifactFactory.json';
+import * as Application from '../../../build/contracts/Application.json';
+import * as ApplicationFactory from '../../../build/contracts/ApplicationFactory.json';
 import * as TruffleContract from 'truffle-contract';
 import {Observable} from "rxjs/Observable";
 
 declare var window: any;
 
 @Injectable()
-export class AppWeb3ArtifactService {
-  FACTORY = TruffleContract(ArtifactFactory);
-  ARTIFACT = TruffleContract(Artifact);
+export class AppWeb3ApplicationService {
+  FACTORY = TruffleContract(ApplicationFactory);
+  APPLICATION = TruffleContract(Application);
 
   constructor(private appWeb3Svc: AppWeb3Service) {
     console.log("Injecting the provider");
@@ -27,11 +27,11 @@ export class AppWeb3ArtifactService {
             from: ethAddress
           });
         })
-        .then(artifact => {
-          observer.next(artifact);
+        .then(application => {
+          observer.next(application);
         })
         .catch(e => {
-          console.error("Unable to create artifacts", e);
+          console.error("Unable to create applications", e);
           observer.error(e)
         });
     });
@@ -46,16 +46,16 @@ export class AppWeb3ArtifactService {
             from: ethAddress
           });
         })
-        .then(artifacts => {
-          console.log("Find all artifacts: " + artifacts);
-          if (artifacts) {
-            artifacts.forEach(artifact => observer.next(this.ARTIFACT.at(artifact)));
+        .then(applications => {
+          console.log("All applications: " + applications);
+          if (applications) {
+            applications.forEach(application => observer.next(this.APPLICATION.at(application)));
           } else {
             observer.next();
           }
         })
         .catch(e => {
-          console.error("Unable to get any artifacts", e);
+          console.error("Unable to get any applications", e);
           observer.error(e)
         });
     });
