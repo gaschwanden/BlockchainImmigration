@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {AppWeb3ApplicationService} from "../app-service/app-web3-application.service";
+import {AppWeb3ApplicationService} from "../../app-common/app-service/app-web3-application.service";
 
 @Component({
   selector: 'app-app-immigration-applications',

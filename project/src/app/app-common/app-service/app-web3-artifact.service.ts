@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {AppWeb3Service} from "./app-web3.service";
 
-import * as Artifact from '../../../build/contracts/Artifact.json';
-import * as ArtifactFactory from '../../../build/contracts/ArtifactFactory.json';
+import * as Artifact from '../../../../build/contracts/Artifact.json';
+import * as ArtifactFactory from '../../../../build/contracts/ArtifactFactory.json';
 import * as TruffleContract from 'truffle-contract';
 import {Observable} from "rxjs/Observable";
 
@@ -16,6 +16,7 @@ export class AppWeb3ArtifactService {
   constructor(private appWeb3Svc: AppWeb3Service) {
     console.log("Injecting the provider");
     this.FACTORY.setProvider(this.appWeb3Svc.currentProvider());
+    this.ARTIFACT.setProvider(this.appWeb3Svc.currentProvider());
   }
 
   create(ethAddress): Observable<any> {
@@ -39,24 +40,16 @@ export class AppWeb3ArtifactService {
 
   findAll(ethAddress: string): Observable<string[]> {
     return Observable.create(observer => {
-      this.FACTORY
-        .deployed()
-        .then(factory => {
-          return factory.findAll({
-            from: ethAddress
-          });
+      this.appWeb3Svc
+        .eth()
+        .filter({
+          fromBlock: 0,
+          toBlock: 'latest',
+          address: ethAddress
         })
-        .then(artifacts => {
-          console.log("Find all artifacts: " + artifacts);
-          if (artifacts) {
-            artifacts.forEach(artifact => observer.next(this.ARTIFACT.at(artifact)));
-          } else {
-            observer.next();
-          }
-        })
-        .catch(e => {
-          console.error("Unable to get any artifacts", e);
-          observer.error(e)
+        .get((error, transactions) => {
+          transactions.forEach(tx =>
+            observer.emit(this.appWeb3Svc.eth().getTransactionReceipt(tx.transactionHash)));
         });
     });
   }

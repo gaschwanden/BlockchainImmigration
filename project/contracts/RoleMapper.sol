@@ -2,7 +2,7 @@ pragma solidity ^0.4.19;
 
 
 contract RoleMapper {
-  enum Role {Applicant, Verifier, Admin}
+  enum Role {Applicant, Verifier, Admin, NA}
   address owner;
   mapping(address => Role) userRoles;
 
@@ -26,7 +26,7 @@ contract RoleMapper {
   }
 
   function remove(address _user) public onlyByOwner {
-    userRoles[_user] = None;
+    userRoles[_user] = Role.NA;
   }
 
   function isValid(address _user, Role role) public constant returns (bool) {

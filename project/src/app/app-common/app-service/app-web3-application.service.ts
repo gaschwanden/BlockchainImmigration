@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {AppWeb3Service} from "./app-web3.service";
 
-import * as Application from '../../../build/contracts/Application.json';
-import * as ApplicationFactory from '../../../build/contracts/ApplicationFactory.json';
+import * as Application from '../../../../build/contracts/Application.json';
+import * as ApplicationFactory from '../../../../build/contracts/ApplicationFactory.json';
 import * as TruffleContract from 'truffle-contract';
 import {Observable} from "rxjs/Observable";
 
@@ -16,6 +16,7 @@ export class AppWeb3ApplicationService {
   constructor(private appWeb3Svc: AppWeb3Service) {
     console.log("Injecting the provider");
     this.FACTORY.setProvider(this.appWeb3Svc.currentProvider());
+    this.APPLICATION.setProvider(this.appWeb3Svc.currentProvider());
   }
 
   create(ethAddress): Observable<any> {

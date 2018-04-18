@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {AppWeb3ArtifactService} from "../app-service/app-web3-artifact.service";
+import {AppWeb3ArtifactService} from "../../app-common/app-service/app-web3-artifact.service";
 
 @Component({
   selector: 'app-app-applicant-dashboard',

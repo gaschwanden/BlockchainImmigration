@@ -22,10 +22,6 @@ contract Visa {
     visaType = _visaType;
   }
 
-  function setVerifiers(address[] _verifiers) public onlyByOwner {
-    verifiers = _verifiers;
-  }
-
   function transferOwnership(address _newOwner) public onlyByOwner {
     owner = _newOwner;
   }

@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {environment} from '../../environments/environment';
+import {environment} from '../../../environments/environment';
 import * as Web3 from 'web3';
 
 declare var window: any;
@@ -27,8 +27,16 @@ export class AppWeb3Service {
     }
   };
 
+  constructor() {
+    this.checkAndInstantiateWeb3();
+  }
+
   currentProvider() {
     return this.web3.currentProvider;
+  }
+
+  eth() {
+    return this.web3.eth;
   }
 
   isAddress(ethAddress: string): boolean {
@@ -36,9 +44,5 @@ export class AppWeb3Service {
       return this.web3.isAddress(ethAddress);
     }
     return false
-  }
-
-  constructor() {
-    this.checkAndInstantiateWeb3();
   }
 }
