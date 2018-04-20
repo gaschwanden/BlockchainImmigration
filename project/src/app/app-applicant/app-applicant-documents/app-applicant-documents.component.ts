@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {AppWeb3ArtifactService} from "../../app-common/app-service/app-web3-artifact.service";
+import {AppWeb3RoleMapperService} from "../../app-common/app-service/app-web3-role-mapper.service";
 
 @Component({
   selector: 'app-app-applicant-dashboard',
@@ -8,9 +9,11 @@ import {AppWeb3ArtifactService} from "../../app-common/app-service/app-web3-arti
 })
 export class AppApplicantDocumentsComponent implements OnInit {
   ethAddress: string;
+  role: any;
   artifacts = [];
 
-  constructor(private appWeb3ArtifactSvc: AppWeb3ArtifactService) {
+  constructor(private appWeb3ArtifactSvc: AppWeb3ArtifactService,
+              private appWeb3RoleMapperSvc: AppWeb3RoleMapperService) {
     this.ethAddress = localStorage.getItem('ethAddress');
   }
 
@@ -23,6 +26,10 @@ export class AppApplicantDocumentsComponent implements OnInit {
           this.artifacts.push(artifact);
         },
         error => this.artifacts = []);
+
+    this.appWeb3RoleMapperSvc
+      .get(this.ethAddress)
+      .subscribe(role => this.role = role);
   }
 
   onUploadClick() {

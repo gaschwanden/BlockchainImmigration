@@ -10,29 +10,29 @@ declare var window: any;
 @Injectable()
 export class AppWeb3RoleMapperService {
 
-  ROLE_MAPPER = TruffleContract(RoleMapper);
+  ABI_ROLE_MAPPER = TruffleContract(RoleMapper);
 
   constructor(private appWeb3Svc: AppWeb3Service) {
     console.log("Injecting the provider");
-    this.ROLE_MAPPER.setProvider(this.appWeb3Svc.currentProvider());
+    this.ABI_ROLE_MAPPER.setProvider(this.appWeb3Svc.currentProvider());
   }
 
-  get(ethAddress): Observable<any> {
+  get(ethAddress): Observable<any[]> {
     return Observable.create(observer => {
-      this.ROLE_MAPPER
+      this.ABI_ROLE_MAPPER
         .deployed()
-        .then(factory => {
-          return factory.get(ethAddress, {
+        .then(instance => {
+          instance.get(ethAddress, {
             from: ethAddress
+          }).then((error, role) => {
+            if (!error) {
+              observer.next(role)
+            } else {
+              observer.error(error);
+            }
           });
         })
-        .then(role => {
-          observer.next(role);
-        })
-        .catch(e => {
-          console.error("Unable to get role artifacts", e);
-          observer.error(e)
-        });
+        .catch(error => observer.error(error));
     });
   }
 }

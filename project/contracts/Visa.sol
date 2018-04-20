@@ -1,28 +1,23 @@
-pragma solidity ^0.4.19;
+pragma solidity ^0.4.21;
 
+import "./Owned.sol";
 
-contract Visa {
-  address owner;
-  string public visaType;
+contract Visa is Owned {
+  bytes32 public visa_name;
+  bytes32 public visa_type;
   //TODO 100 point check
   //TODO set of document types
-
-  // modifiers
-  modifier onlyByOwner {
-    if (msg.sender != owner) revert();
-    _;
-  }
 
   // constructors
   function Visa() public {
     owner = msg.sender;
   }
 
-  function setVisaType(string _visaType) public onlyByOwner {
-    visaType = _visaType;
+  function setType(bytes32 _type) public onlyByOwner {
+    visa_type = _type;
   }
 
-  function transferOwnership(address _newOwner) public onlyByOwner {
-    owner = _newOwner;
+  function setName(bytes32 _name) public onlyByOwner {
+    visa_name = _name;
   }
 }

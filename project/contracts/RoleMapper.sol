@@ -1,14 +1,18 @@
-pragma solidity ^0.4.19;
+pragma solidity ^0.4.21;
 
+import "./Owned.sol";
 
-contract RoleMapper {
-  enum Role {Applicant, Verifier, Admin, NA}
-  address owner;
-  mapping(address => Role) userRoles;
+contract RoleMapper is Owned {
+  bytes32 constant APPLICANT = 'Applicant';
+  bytes32 constant VERIFIER = 'Verifier';
+  bytes32 constant ADMIN = 'Admin';
+  bytes32 constant NA = 'NA';
 
-  // modifiers
-  modifier onlyByOwner {
-    if (msg.sender != owner) revert();
+  mapping(address => bytes32) user_roles;
+
+  //modifier
+  modifier onlyValidRole(bytes32 _role) {
+    if (_role != APPLICANT && _role != VERIFIER && _role != ADMIN) revert();
     _;
   }
 
@@ -17,19 +21,19 @@ contract RoleMapper {
     owner = msg.sender;
   }
 
-  function add(address _user, Role role) public onlyByOwner {
-    userRoles[_user] = role;
+  function add(address _user, bytes32 _role) public onlyByOwner onlyValidRole(_role) {
+    user_roles[_user] = _role;
   }
 
-  function get(address _user) public constant returns (Role) {
-    return userRoles[_user];
+  function get(address _user) public view returns (bytes32) {
+    return user_roles[_user];
   }
 
   function remove(address _user) public onlyByOwner {
-    userRoles[_user] = Role.NA;
+    user_roles[_user] = NA;
   }
 
-  function isValid(address _user, Role role) public constant returns (bool) {
-    return userRoles[_user] == role;
+  function isValid(address _user, bytes32 _role) public onlyValidRole(_role) view returns (bool) {
+    return user_roles[_user] == _role;
   }
 }

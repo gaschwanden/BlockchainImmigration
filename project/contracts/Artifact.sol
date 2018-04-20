@@ -1,26 +1,17 @@
-pragma solidity ^0.4.19;
+pragma solidity ^0.4.21;
 
+import "./Owned.sol";
 
-contract Artifact {
-  address public owner;
-  string public url;
-  bool public verified;
+contract Artifact is Owned {
+  bytes32 public name;
+  bytes32 location;
+  bool public is_valid;
   address public verifier;
-  string artifactType; //FIXME this should be an enum
+  bytes32 public artifact_type; //FIXME this should be an enum
 
-  //TODO store the image hash
-
-  //events
-  event NotifyVerifier(address _artifact, address _verifier);
-
-  // modifiers
-  modifier onlyByOwner {
-    if (msg.sender != owner) revert();
-    _;
-  }
-
-  modifier onlyByVerifier {
-    if (verifier > 0 && verifier != msg.sender) revert();
+  //modifier
+  modifier onlyByVerifier() {
+    if (verifier != 0 && verifier != msg.sender) revert();
     _;
   }
 
@@ -29,25 +20,24 @@ contract Artifact {
     owner = msg.sender;
   }
 
-  function transferOwnership(address _newOwner) public onlyByOwner {
-    owner = _newOwner;
+  function setType(bytes32 _type) public onlyByOwner {
+    artifact_type = _type;
   }
 
-  function setUrl(string _url) public onlyByOwner {
-    url = _url;
+  function setUrl(bytes32 _url) public onlyByOwner {
+    location = _url;
   }
 
-  function getUrl() public constant onlyByOwner onlyByVerifier returns (string) {
-    return url;
+  function setValid(bool _flag) public onlyByVerifier {
+    is_valid = _flag;
   }
 
-  function setVerifier(address _verifier) public onlyByOwner {
-    verifier = _verifier;
-    NotifyVerifier(address(this), verifier);
+  function setName(bytes32 artifact_name) public onlyByOwner {
+    name = artifact_name;
   }
 
-  function verify(address _verifier, bool _verified) public onlyByVerifier {
-    verifier = _verifier;
-    verified = _verified;
+  function getUrl() public view onlyByOwner onlyByVerifier returns (bytes32) {
+    return location;
   }
 }
+
