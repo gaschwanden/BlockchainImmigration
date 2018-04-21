@@ -22,7 +22,7 @@ export class AppApplicantApplicationsComponent implements OnInit {
           this.applications.push(application);
         },
         error => {
-          console.error("Unable to find all application for: " + this.ethAddress, error);
+          console.error("Unable to find all application", error);
           this.applications = [];
         });
   }
@@ -34,7 +34,6 @@ export class AppApplicantApplicationsComponent implements OnInit {
         application => {
           this.applications.push(application);
         },
-        error => console.error("Unable to create new application for: " + this.ethAddress, error));
+        error => console.error("Unable to create new application", error));
   }
-
 }

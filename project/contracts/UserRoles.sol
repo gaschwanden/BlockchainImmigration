@@ -2,7 +2,7 @@ pragma solidity ^0.4.21;
 
 import "./Owned.sol";
 
-contract RoleMapper is Owned {
+contract UserRoles is Owned {
   bytes32 constant APPLICANT = 'Applicant';
   bytes32 constant VERIFIER = 'Verifier';
   bytes32 constant ADMIN = 'Admin';
@@ -17,19 +17,19 @@ contract RoleMapper is Owned {
   }
 
   // constructors
-  function RoleMapper() public {
+  function UserRoles() public {
     owner = msg.sender;
   }
 
-  function add(address _user, bytes32 _role) public onlyByOwner onlyValidRole(_role) {
+  function addRole(address _user, bytes32 _role) public onlyByOwner onlyValidRole(_role) {
     user_roles[_user] = _role;
   }
 
-  function get(address _user) public view returns (bytes32) {
+  function findUser(address _user) public view returns (bytes32) {
     return user_roles[_user];
   }
 
-  function remove(address _user) public onlyByOwner {
+  function removeUser(address _user) public onlyByOwner {
     user_roles[_user] = NA;
   }
 

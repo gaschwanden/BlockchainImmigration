@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {AppWeb3ArtifactService} from "../../app-common/app-service/app-web3-artifact.service";
-import {AppWeb3RoleMapperService} from "../../app-common/app-service/app-web3-role-mapper.service";
+import {AppWeb3UserRolesService} from "../../app-common/app-service/app-web3-user-roles.service";
 
 @Component({
   selector: 'app-app-applicant-dashboard',
@@ -13,7 +13,7 @@ export class AppApplicantDocumentsComponent implements OnInit {
   artifacts = [];
 
   constructor(private appWeb3ArtifactSvc: AppWeb3ArtifactService,
-              private appWeb3RoleMapperSvc: AppWeb3RoleMapperService) {
+              private appWeb3RoleMapperSvc: AppWeb3UserRolesService) {
     this.ethAddress = localStorage.getItem('ethAddress');
   }
 
@@ -25,11 +25,10 @@ export class AppApplicantDocumentsComponent implements OnInit {
           console.log(artifact);
           this.artifacts.push(artifact);
         },
-        error => this.artifacts = []);
-
-    this.appWeb3RoleMapperSvc
-      .get(this.ethAddress)
-      .subscribe(role => this.role = role);
+        error => {
+          console.log("Error while finding artifacts", error);
+          this.artifacts = [];
+        });
   }
 
   onUploadClick() {
@@ -39,6 +38,9 @@ export class AppApplicantDocumentsComponent implements OnInit {
         artifact => {
           console.log(artifact);
           this.artifacts.push(artifact);
+        },
+        error => {
+          console.log("Error while creating artifact", error);
         });
   }
 

@@ -1,7 +1,6 @@
 pragma solidity ^0.4.21;
 
 import "./Owned.sol";
-import "./Artifact.sol";
 
 contract UserArtifacts is Owned {
   mapping(address => address[]) user_artifacts;

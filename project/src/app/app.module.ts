@@ -19,7 +19,7 @@ import {AppApplicantApplicationsComponent} from "./app-applicant/app-applicant-a
 import {AppWeb3ApplicationService} from "./app-common/app-service/app-web3-application.service";
 import {AppVerifierDocumentsComponent} from "./app-verifier/app-verifier-documents/app-verifier-documents.component";
 import {AppImmigrationApplicationsComponent} from "./app-immigration/app-immigration-applications/app-immigration-applications.component";
-import {AppWeb3RoleMapperService} from "./app-common/app-service/app-web3-role-mapper.service";
+import {AppWeb3UserRolesService} from "./app-common/app-service/app-web3-user-roles.service";
 import {AppWeb3VisaService} from "./app-common/app-service/app-web3-visa.service";
 
 const APP_ROUTES: Routes = [
@@ -68,7 +68,7 @@ const PROVIDERS = [
   AppWeb3Service,
   AppWeb3ArtifactService,
   AppWeb3ApplicationService,
-  AppWeb3RoleMapperService,
+  AppWeb3UserRolesService,
   AppWeb3VisaService
 ];
 

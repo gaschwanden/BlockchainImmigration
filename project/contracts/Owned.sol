@@ -8,9 +8,4 @@ contract Owned {
     if (msg.sender != owner) revert();
     _;
   }
-
-  // constructors
-  function transferOwnership(address new_owner) public onlyByOwner {
-    owner = new_owner;
-  }
 }
