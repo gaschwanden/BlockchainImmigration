@@ -1,4 +1,5 @@
 import {Component, OnInit} from '@angular/core';
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-app-verifier',
@@ -7,13 +8,14 @@ import {Component, OnInit} from '@angular/core';
 })
 export class AppVerifierLoginComponent implements OnInit {
 
-  constructor() {
+  constructor(private router: Router) {
   }
 
   ngOnInit() {
   }
 
   onClickSubmit(data) {
-    alert("Entered ETH Address : " + data.invalidEthAddress);
+    localStorage.setItem('ethAddress', data.ethAddress);
+    this.router.navigateByUrl('/verifier/' + data.ethAddress + '/documents');
   }
 }

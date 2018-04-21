@@ -1,19 +1,17 @@
-pragma solidity ^0.4.19;
+pragma solidity ^0.4.21;
 
+import "./Owned.sol";
 
-contract Artifact {
-  address public owner;
-  string public url;
-  bool public verified;
+contract Artifact is Owned {
+  bytes32 public name;
+  bytes32 location;
+  bool public is_valid;
   address public verifier;
-  string artifactType; //FIXME this should be an enum
+  bytes32 public artifact_type; //FIXME this should be an enum
 
-  //TODO store the image hash
-
-
-  // modifiers
-  modifier onlyByOwner {
-    if (msg.sender != owner) throw;
+  //modifier
+  modifier onlyByVerifier() {
+    if (verifier != 0 && verifier != msg.sender) revert();
     _;
   }
 
@@ -22,16 +20,24 @@ contract Artifact {
     owner = msg.sender;
   }
 
-  function setUrl(string _url) public onlyByOwner {
-    url = _url;
+  function setType(bytes32 _type) public onlyByOwner {
+    artifact_type = _type;
   }
 
-  function getUrl() public constant returns (string) {
-    return url;
+  function setUrl(bytes32 _url) public onlyByOwner {
+    location = _url;
   }
 
-  function verify(address _verifier, bool _verified) {
-    verifier = _verifier;
-    verified = _verified;
+  function setValid(bool _flag) public onlyByVerifier {
+    is_valid = _flag;
+  }
+
+  function setName(bytes32 artifact_name) public onlyByOwner {
+    name = artifact_name;
+  }
+
+  function getUrl() public view onlyByOwner onlyByVerifier returns (bytes32) {
+    return location;
   }
 }
+

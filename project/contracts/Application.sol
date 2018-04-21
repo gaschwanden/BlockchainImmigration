@@ -1,49 +1,29 @@
-pragma solidity ^0.4.19;
+pragma solidity ^0.4.21;
 
-import "./Artifact.sol";
-import "./Visa.sol";
+import "./Owned.sol";
 
-contract Application {
-    address public owner;
-    Artifact[] artifacts;
-  bool approved;
-    Visa visa;
+contract Application is Owned {
+  mapping(uint => address) public linked_artifacts;
+  bool public is_approved;
+  address public visa_details;
+  uint artifact_count;
 
-    // modifiers
-    modifier onlyByOwner {
-        if (msg.sender != owner) throw;
-        _;
-    }
-    modifier artifactsVerified {
-        for (uint i = 0; i < artifacts.length; i++) {
-          if (artifacts[i].verified() == false) throw;
-            _;
-        }
-    }
-
-    // constructors
+  // constructors
   function Application() public {
-        owner = msg.sender;
+    owner = msg.sender;
   }
 
-  function setVisa(Visa _visa) {
-    visa = _visa;
+  function setVisa(address _visa) public onlyByOwner {
+    visa_details = _visa;
   }
 
-  function setArtifacts(Artifact[] _artifacts) public {
-    artifacts = _artifacts;
-    }
+  function addArtifact(address _artifact) public onlyByOwner {
+    artifact_count++;
+    linked_artifacts[artifact_count] = _artifact;
+  }
 
-    function getAllArtifacts() public constant returns (Artifact[]) {
-        return artifacts;
-    }
-
-    function isApproved() public constant returns (bool) {
-      return approved;
-    }
-
-  function isArtifactsVerified(bool _approved) public onlyByOwner artifactsVerified {
-    approved = _approved;
-    }
-
+  function decision(bool _decision) public onlyByOwner {
+    is_approved = _decision;
+  }
 }
+
