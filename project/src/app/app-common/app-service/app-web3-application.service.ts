@@ -19,7 +19,7 @@ export class AppWeb3ApplicationService {
     this.USER_APPLICATIONS.setProvider(this.appWeb3Svc.currentProvider());
   }
 
-  create(ethAddress): Observable<any> {
+  create(ethAddress: string): Observable<any> {
     return Observable.create(observer => {
       this.APPLICATION
         .new({

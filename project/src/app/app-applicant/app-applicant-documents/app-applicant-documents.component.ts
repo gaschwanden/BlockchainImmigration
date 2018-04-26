@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {AppWeb3ArtifactService} from "../../app-common/app-service/app-web3-artifact.service";
-import {AppWeb3UserRolesService} from "../../app-common/app-service/app-web3-user-roles.service";
 
 @Component({
   selector: 'app-app-applicant-dashboard',
@@ -12,8 +11,7 @@ export class AppApplicantDocumentsComponent implements OnInit {
   role: any;
   artifacts = [];
 
-  constructor(private appWeb3ArtifactSvc: AppWeb3ArtifactService,
-              private appWeb3RoleMapperSvc: AppWeb3UserRolesService) {
+  constructor(private appWeb3ArtifactSvc: AppWeb3ArtifactService) {
     this.ethAddress = localStorage.getItem('ethAddress');
   }
 
