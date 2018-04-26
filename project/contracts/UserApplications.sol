@@ -3,14 +3,20 @@ pragma solidity ^0.4.21;
 import "./Owned.sol";
 
 contract UserApplications is Owned {
+  address[] all_applications;
   mapping(address => address[]) user_applications;
 
-  function registerApplication(address application) public {
-    user_applications[msg.sender].push(application) - 1;
+  function registerApplication(address _application) public {
+    user_applications[msg.sender].push(_application) - 1;
+    all_applications.push(_application) - 1;
   }
 
-  function findUserApplications(address user) view public returns (address[]){
-    return user_applications[user];
+  function findAllApplications() public constant returns (address[]) {
+    return all_applications;
+  }
+
+  function findUserApplications(address _user) constant public returns (address[]){
+    return user_applications[_user];
   }
 }
 

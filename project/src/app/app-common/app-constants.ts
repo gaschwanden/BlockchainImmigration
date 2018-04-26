@@ -3,3 +3,11 @@ enum Roles {
   Verifier,
   Admin
 }
+
+enum Visas {
+
+}
+
+enum ArtifactTypes {
+
+}

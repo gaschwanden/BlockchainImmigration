@@ -1,9 +1,4 @@
 <div class="row">
-  <div class="col-lg">
-    <h2>Welcome {{ethAddress}}</h2>
-  </div>
-</div>
-<div class="row">
   <div class="col-3">
     <div class="list-group">
       <a href="/applicant/{{ethAddress}}/documents" class="list-group-item">Documents</a>
@@ -11,6 +6,13 @@
     </div>
   </div>
   <div class="col-9">
+    <div class="row">
+      <div class="row">
+        <div class="col-lg">
+          <h2>Welcome {{ethAddress}} - {{role}}</h2>
+        </div>
+      </div>
+    </div>
     <div class="row">
       <div class="col-4" *ngFor="let application of applications">
         <div class="card" style="width: 18rem;">

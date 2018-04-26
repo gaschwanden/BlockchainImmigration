@@ -11,12 +11,12 @@ declare var window: any;
 @Injectable()
 export class AppWeb3ArtifactService {
   ARTIFACT = TruffleContract(Artifact);
-  USER_ARTIFATCS = TruffleContract(UserArtifacts);
+  USER_ARTIFACTS = TruffleContract(UserArtifacts);
 
   constructor(private appWeb3Svc: AppWeb3Service) {
     console.log("Injecting the provider");
     this.ARTIFACT.setProvider(this.appWeb3Svc.currentProvider());
-    this.USER_ARTIFATCS.setProvider(this.appWeb3Svc.currentProvider());
+    this.USER_ARTIFACTS.setProvider(this.appWeb3Svc.currentProvider());
   }
 
   create(ethAddress): Observable<any> {
@@ -26,7 +26,7 @@ export class AppWeb3ArtifactService {
           from: ethAddress
         })
         .then(artifact => {
-          this.USER_ARTIFATCS
+          this.USER_ARTIFACTS
             .deployed()
             .then(registry => {
               registry.registerArtifact(artifact.address, {from: ethAddress})
@@ -43,7 +43,7 @@ export class AppWeb3ArtifactService {
   findAll(ethAddress: string):
     Observable<any[]> {
     return Observable.create(observer => {
-      this.USER_ARTIFATCS
+      this.USER_ARTIFACTS
         .deployed()
         .then(factory => {
           factory.findUserArtifacts(ethAddress, {from: ethAddress})

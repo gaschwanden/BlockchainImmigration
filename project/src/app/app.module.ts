@@ -19,8 +19,12 @@ import {AppApplicantApplicationsComponent} from "./app-applicant/app-applicant-a
 import {AppWeb3ApplicationService} from "./app-common/app-service/app-web3-application.service";
 import {AppVerifierDocumentsComponent} from "./app-verifier/app-verifier-documents/app-verifier-documents.component";
 import {AppImmigrationApplicationsComponent} from "./app-immigration/app-immigration-applications/app-immigration-applications.component";
-import {AppWeb3UserRolesService} from "./app-common/app-service/app-web3-user-roles.service";
 import {AppWeb3VisaService} from "./app-common/app-service/app-web3-visa.service";
+import {AppWeb3ApplicantRegistryService} from "./app-common/app-service/app-web3-applicant-registry.service";
+import {AppWeb3AdminRegistryService} from "./app-common/app-service/app-web3-admin-registry.service";
+import {AppWeb3VerifierRegistryService} from "./app-common/app-service/app-web3-verifier-registry.service";
+import {AppImmigrationVerifiersComponent} from "./app-immigration/app-immigration-verifiers/app-immigration-verifiers.component";
+import {AppImmigrationVisasComponent} from "./app-immigration/app-immigration-visas/app-immigration-visas.component";
 
 const APP_ROUTES: Routes = [
   {path: '', component: AppHomeComponent},
@@ -38,47 +42,45 @@ const APP_ROUTES: Routes = [
   // immigration routes
   {path: 'immigration', component: AppImmigrationLoginComponent},
   {path: 'immigration/:ethAddress/applications', component: AppImmigrationApplicationsComponent},
+  {path: 'immigration/:ethAddress/verifiers', component: AppImmigrationVerifiersComponent},
+  {path: 'immigration/:ethAddress/visas', component: AppImmigrationVisasComponent},
 ];
-
-const COMPONENTS = [
-  AppComponent,
-  AppNavbarComponent,
-  AppApplicantLoginComponent,
-  AppVerifierLoginComponent,
-  AppImmigrationLoginComponent,
-  AppHomeComponent,
-  AppApplicantRegisterComponent,
-  AppApplicantDocumentsComponent,
-  AppApplicantApplicationsComponent,
-  AppVerifierDocumentsComponent,
-  AppImmigrationApplicationsComponent,
-  EthAddressValidatorDirective
-];
-
-const IMPORTS = [
-  RouterModule.forRoot(
-    APP_ROUTES,
-    {enableTracing: true} // <-- debugging purposes only
-  ),
-  FormsModule,
-  BrowserModule
-];
-
-const PROVIDERS = [
-  AppWeb3Service,
-  AppWeb3ArtifactService,
-  AppWeb3ApplicationService,
-  AppWeb3UserRolesService,
-  AppWeb3VisaService
-];
-
-const BOOTSTRAP = [AppComponent];
 
 @NgModule({
-  declarations: COMPONENTS,
-  imports: IMPORTS,
-  providers: PROVIDERS,
-  bootstrap: BOOTSTRAP
+  declarations: [
+    AppComponent,
+    AppNavbarComponent,
+    AppApplicantLoginComponent,
+    AppVerifierLoginComponent,
+    AppImmigrationLoginComponent,
+    AppHomeComponent,
+    AppApplicantRegisterComponent,
+    AppApplicantDocumentsComponent,
+    AppApplicantApplicationsComponent,
+    AppVerifierDocumentsComponent,
+    AppImmigrationApplicationsComponent,
+    AppImmigrationVerifiersComponent,
+    AppImmigrationVisasComponent,
+    EthAddressValidatorDirective
+  ],
+  imports: [
+    RouterModule.forRoot(
+      APP_ROUTES,
+      {enableTracing: true} // <-- debugging purposes only
+    ),
+    FormsModule,
+    BrowserModule
+  ],
+  providers: [
+    AppWeb3Service,
+    AppWeb3ArtifactService,
+    AppWeb3ApplicationService,
+    AppWeb3AdminRegistryService,
+    AppWeb3ApplicantRegistryService,
+    AppWeb3VerifierRegistryService,
+    AppWeb3VisaService
+  ],
+  bootstrap: [AppComponent]
 })
 export class AppModule {
 }

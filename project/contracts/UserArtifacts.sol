@@ -5,12 +5,12 @@ import "./Owned.sol";
 contract UserArtifacts is Owned {
   mapping(address => address[]) user_artifacts;
 
-  function registerArtifact(address artifact) public {
-    user_artifacts[msg.sender].push(artifact) - 1;
+  function registerArtifact(address _artifact) public {
+    user_artifacts[msg.sender].push(_artifact) - 1;
   }
 
-  function findUserArtifacts(address user) view public returns (address[]){
-    return user_artifacts[user];
+  function findUserArtifacts(address _user) constant public returns (address[]){
+    return user_artifacts[_user];
   }
 }
 
