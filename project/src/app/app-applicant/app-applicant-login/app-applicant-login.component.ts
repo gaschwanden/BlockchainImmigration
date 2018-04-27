@@ -23,7 +23,7 @@ export class AppApplicantLoginComponent {
             alert("ETH Address is not registered as applicant.");
           }
         },
-        error => console.error("User is not registered applicant", error));
+        error => alert("User is not registered applicant: " + error));
   }
 
 }
