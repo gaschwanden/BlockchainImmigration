@@ -51,4 +51,19 @@ export class AppWeb3ApplicantRegistryService {
         .catch(error => observer.error(error));
     });
   }
+
+  findAll(ethAddress: string): Observable<any> {
+    return Observable.create(observer => {
+      this.APPLICANT_REGISTRY
+        .deployed()
+        .then(registry => {
+          const total = registry.applicantCount();
+          for (let i = 0; i < total; i++) {
+            registry.findOne(i)
+              .then(observer.next)
+              .catch(observer.error);
+          }
+        }).catch(observer.error);
+    });
+  }
 }

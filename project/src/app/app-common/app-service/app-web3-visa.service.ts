@@ -42,7 +42,12 @@ export class AppWeb3VisaService {
       this.VISA_REGISTRY
         .deployed()
         .then(registry => {
-          observer.next(registry.all_visas(0));
+          const total = registry.visaCount();
+          for (let i = 0; i < total; i++) {
+            registry.findOne(i)
+              .then(observer.next)
+              .catch(observer.error);
+          }
         })
         .catch(error => observer.error(error));
     });

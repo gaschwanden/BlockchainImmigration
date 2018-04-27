@@ -3,16 +3,18 @@ pragma solidity ^0.4.0;
 import "./Owned.sol";
 
 contract ApplicantRegistry is Owned {
-  address[] public applicants;
+  mapping(uint => address) public applicants;
   mapping(address => bool) public applicant_status;
+  uint public applicantCount;
 
   function ApplicantRegistry() public {
     owner = msg.sender;
   }
 
-  function addApplicant(address _newApplicant) public onlyByOwner {
-    applicants.push(_newApplicant) - 1;
+  function addApplicant(address _newApplicant) public {
+    applicants[applicantCount] = _newApplicant;
     applicant_status[_newApplicant] = true;
+    applicantCount++;
   }
 
   function changeStatus(address _applicant, bool _active) public onlyByOwner {
@@ -21,5 +23,9 @@ contract ApplicantRegistry is Owned {
 
   function getApplicantStatus(address _applicant) public constant returns (bool) {
     return applicant_status[_applicant];
+  }
+
+  function findOne(uint idx) public constant returns (address){
+    return applicants[idx];
   }
 }

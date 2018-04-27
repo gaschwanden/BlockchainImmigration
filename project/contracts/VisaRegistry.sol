@@ -3,7 +3,7 @@ pragma solidity ^0.4.21;
 import "./Owned.sol";
 
 contract VisaRegistry is Owned {
-  address[] public all_visas;
+  mapping(uint => address) public all_visas;
   uint public visaCount;
   mapping(bytes32 => address) visaMap;
 
@@ -21,7 +21,7 @@ contract VisaRegistry is Owned {
     return visaMap[_code];
   }
 
-  function findAll() public constant returns (address[]) {
-    return all_visas;
+  function findOne(uint idx) public constant returns (address) {
+    return all_visas[idx];
   }
 }
