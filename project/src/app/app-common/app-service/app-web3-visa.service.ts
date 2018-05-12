@@ -19,20 +19,18 @@ export class AppWeb3VisaService {
   }
 
   create(ethAddress: string, visaCode: string, visaName: string): Observable<any> {
+    let hexVisaCode = this.appWeb3Svc.toHex(visaCode);
+    let hexVisaName = this.appWeb3Svc.toHex(visaName);
     return Observable.create(observer => {
+      let visaAddress;
       this.VISA
-        .new(visaCode, visaName, {
-          from: ethAddress
-        })
+        .new(visaCode, visaName, {from: ethAddress})
         .then(visa => {
-          this.VISA_REGISTRY
-            .deployed()
-            .then(registry => {
-              return registry.addVisa(visaCode, visa.address, {from: ethAddress});
-            })
-            .then(result => observer.next(visa))
-            .catch(error => observer.error(error));
+          visaAddress = visa.address;
+          return this.VISA_REGISTRY.deployed()
         })
+        .then(registry => registry.addVisa(visaCode, visaAddress, {from: ethAddress}))
+        .then(result => observer.next(result))
         .catch(error => observer.error(error));
     });
   }
@@ -41,14 +39,8 @@ export class AppWeb3VisaService {
     return Observable.create(observer => {
       this.VISA_REGISTRY
         .deployed()
-        .then(registry => {
-          const total = registry.visaCount();
-          for (let i = 0; i < total; i++) {
-            registry.findOne(i)
-              .then(observer.next)
-              .catch(observer.error);
-          }
-        })
+        .then(registry => registry.findAll({from: ethAddress}))
+        .then(addresses => addresses.forEach(address => this.VISA.at(observer.next(address))))
         .catch(error => observer.error(error));
     });
   }

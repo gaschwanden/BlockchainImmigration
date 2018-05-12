@@ -7,7 +7,7 @@ import {AppWeb3VisaService} from "../../app-common/app-service/app-web3-visa.ser
   styleUrls: ['./app-immigration-visas.component.css']
 })
 export class AppImmigrationVisasComponent implements OnInit {
-  visas: any[];
+  visas: any[] = [];
   ethAddress: string;
 
   constructor(private appWeb3VisaSvc: AppWeb3VisaService) {

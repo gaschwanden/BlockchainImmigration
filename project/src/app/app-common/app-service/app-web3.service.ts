@@ -35,8 +35,8 @@ export class AppWeb3Service {
     return this.web3.currentProvider;
   }
 
-  eth() {
-    return this.web3.eth;
+  toHex(value: string): string {
+    return this.web3.toHex(value);
   }
 
   isAddress(ethAddress: string): boolean {

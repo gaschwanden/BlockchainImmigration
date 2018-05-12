@@ -1,9 +1,9 @@
-pragma solidity ^0.4.0;
+pragma solidity ^0.4.21;
 
 import "./Owned.sol";
 
 contract VerifierRegistry is Owned {
-  mapping(uint => address) public verifiers;
+  address[] public verifiers;
   mapping(address => bool) public verifier_status;
   uint public verifierCount;
 
@@ -12,7 +12,7 @@ contract VerifierRegistry is Owned {
   }
 
   function addVerifier(address _newVerifier) public onlyByOwner {
-    verifiers[verifierCount] = _newVerifier;
+    verifiers.push(_newVerifier) - 1;
     verifier_status[_newVerifier] = true;
     verifierCount++;
   }
