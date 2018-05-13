@@ -1,3 +1,4 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px' }"></ngx-loading>
 <div class="row">
   <div class="col-3">
     <div class="list-group">
@@ -14,6 +15,13 @@
       </div>
     </div>
     <div class="row">
+      <div class="col-4">
+        <div class="card" style="width: 18rem;">
+          <div class="card-body">
+            <button type="button" class="btn btn-primary" (click)="onCreateClick()">Create</button>
+          </div>
+        </div>
+      </div>
       <div class="col-4" *ngFor="let application of applications">
         <div class="card" style="width: 18rem;">
           <div class="card-body">
@@ -23,14 +31,6 @@
               content.</p>
             <a href="#" class="card-link" routerLinkActive="true" routerLink="/application/{{application}}">Open</a>
             <a href="#" class="card-link">Withdraw</a>
-          </div>
-        </div>
-      </div>
-      <div class="col-4">
-        <div class="card" style="width: 18rem;">
-          <img class="fas fa-plus-circle">
-          <div class="card-body">
-            <button type="button" class="btn btn-primary" (click)="onCreateClick()">Create</button>
           </div>
         </div>
       </div>

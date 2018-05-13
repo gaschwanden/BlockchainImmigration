@@ -3,4 +3,5 @@ export class VerifierEntity {
   public docTypes: string[] = [];
   public address: string;
   public status: boolean;
+  public wallet: string;
 }

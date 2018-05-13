@@ -20,22 +20,75 @@ export class AppWeb3VerifierService {
     this.VERIFIER_REGISTRY.setProvider(this.appWeb3Svc.currentProvider());
   }
 
-  checkStatus(ethAddress: string): Observable<boolean> {
+  findArtifacts(verifierWalletAddress: string): Observable<any> {
     return Observable.create(observer => {
-      let verifier = this.VERIFIER.at(ethAddress);
-      if (verifier) {
-        verifier.status()
-          .then(status => observer.next(status))
-          .catch(error => observer.error(error))
-      } else {
-        observer.error("Invalid verifier address")
-      }
+      this.VERIFIER_REGISTRY
+        .deployed()
+        .then(registry => registry.findOne(verifierWalletAddress))
+        .then(address => {
+          let verifier = this.VERIFIER.at(address);
+          return verifier.getArtifacts();
+        })
+        .then(addresses => {
+          if (addresses.length > 0) {
+            addresses.forEach(address => observer.next(address));
+          } else {
+            observer.complete();
+          }
+        })
+        .catch(error => observer.err(error));
     });
   }
 
-  findOne(ethAddress: string): Observable<boolean> {
+  addArtifact(verifierWalletAddr: string, artifactAddress: string): Observable<any> {
     return Observable.create(observer => {
-      observer.next(this.addressToVerifierEntity(ethAddress));
+      this.VERIFIER_REGISTRY
+        .deployed()
+        .then(registry => registry.findOne(verifierWalletAddr))
+        .then(address => {
+          let verifier = this.VERIFIER.at(address);
+          verifier.addArtifact(artifactAddress);
+        })
+        .then(result => observer.next(true))
+        .catch(error => observer.error(error));
+    });
+  }
+
+  checkStatus(ethAddress: string): Observable<boolean> {
+    return Observable.create(observer => {
+      this.VERIFIER_REGISTRY
+        .deployed()
+        .then(registry => registry.findOne(ethAddress))
+        .then(address => {
+          if (address) {
+            this.VERIFIER.at(address).status()
+              .then(status => observer._next(status))
+              .catch(error => observer.error(error));
+          } else {
+            observer.complete();
+          }
+        })
+        .catch(error => observer.error(error));
+    });
+  }
+
+  findVerifierContract(verifierAddress: string): any {
+    return this.VERIFIER.at(verifierAddress);
+  }
+
+  findOne(ethAddress: string): Observable<VerifierEntity> {
+    return Observable.create(observer => {
+      this.VERIFIER_REGISTRY
+        .deployed()
+        .then(registry => registry.findOne(ethAddress))
+        .then(address => {
+          if (address) {
+            observer.next(this.addressToVerifierEntity(address));
+          } else {
+            observer.complete();
+          }
+        })
+        .catch(error => observer.error(error));
     });
   }
 
@@ -58,12 +111,12 @@ export class AppWeb3VerifierService {
   addVerifier(verifierEntity: VerifierEntity, ethAddress: string): Observable<boolean> {
     return Observable.create(observer => {
       let verifier;
-      this.VERIFIER.new(verifierEntity.name, verifierEntity.address, verifierEntity.docTypes, {from: ethAddress})
+      this.VERIFIER.new(verifierEntity.name, verifierEntity.wallet, verifierEntity.docTypes, {from: ethAddress})
         .then(instance => {
           verifier = instance;
           return this.VERIFIER_REGISTRY.deployed();
         })
-        .then(registry => registry.addVerifier(verifier.address, {from: ethAddress}))
+        .then(registry => registry.addVerifier(verifierEntity.wallet, verifier.address, {from: ethAddress}))
         .then(result => observer.next(this.toVerifierEntity(verifier)))
         .catch(error => observer.error(error));
     });
@@ -89,6 +142,9 @@ export class AppWeb3VerifierService {
     truffleVerifier.getDocTypes()
       .then(values => values.forEach(value => verifier.docTypes.push(this.appWeb3Svc.toString(value))))
       .catch(error => console.log("Unable to set doc types of verifier: " + error));
+    truffleVerifier.wallet()
+      .then(value => verifier.wallet = value)
+      .catch(error => console.log("Unable to set wallet of verifier: " + error));
     verifier.address = truffleVerifier.address;
     return verifier;
   }

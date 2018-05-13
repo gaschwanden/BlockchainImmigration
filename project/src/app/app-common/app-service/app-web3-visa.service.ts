@@ -76,7 +76,7 @@ export class AppWeb3VisaService {
       .then(value => visa.name = this.appWeb3Svc.toString(value))
       .catch(error => console.log("Unable to set visa name", error));
     truffleVisa.visa_code()
-      .then(value => visa.code = this.appWeb3Svc.toNumber(value))
+      .then(value => visa.code = this.appWeb3Svc.toString(value))
       .catch(error => console.log("Unable to set visa code", error));
     visa.address = truffleVisa.address;
     return visa;

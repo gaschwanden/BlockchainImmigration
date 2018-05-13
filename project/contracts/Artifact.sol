@@ -16,24 +16,16 @@ contract Artifact is Owned {
   }
 
   // constructors
-  function Artifact() public {
+  function Artifact(bytes32 pName, bytes32 pLocation, address pVerifier, bytes32 pType) public {
     owner = msg.sender;
-  }
-
-  function setType(bytes32 _type) public onlyByOwner {
-    artifact_type = _type;
-  }
-
-  function setUrl(bytes32 _url) public onlyByOwner {
-    location = _url;
+    name = pName;
+    location = pLocation;
+    verifier = pVerifier;
+    artifact_type = pType;
   }
 
   function setValid(bool _flag) public onlyByVerifier {
     is_valid = _flag;
-  }
-
-  function setName(bytes32 artifact_name) public onlyByOwner {
-    name = artifact_name;
   }
 
   function getUrl() public view onlyByOwner onlyByVerifier returns (bytes32) {

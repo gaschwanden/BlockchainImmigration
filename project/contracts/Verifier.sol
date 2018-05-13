@@ -7,6 +7,7 @@ contract Verifier is Owned {
   address public wallet;
   bytes32[] doc_types;
   bool public status;
+  address[] artifacts;
 
   // constructors
   function Verifier(bytes32 pName, address pWallet, bytes32[] pDocTypes) public {
@@ -23,6 +24,14 @@ contract Verifier is Owned {
 
   function getDocTypes() public view returns (bytes32[]) {
     return doc_types;
+  }
+
+  function getArtifacts() public view returns (address[]) {
+    return artifacts;
+  }
+
+  function addArtifact(address _artifact) public {
+    artifacts.push(_artifact) - 1;
   }
 
   function setStatus(bool pStatus) public onlyByOwner {

@@ -3,19 +3,23 @@ pragma solidity ^0.4.21;
 import "./Owned.sol";
 
 contract VerifierRegistry is Owned {
+  mapping(address => address) verifierMap;
   address[] verifiers;
-  uint public verifierCount;
 
   function VerifierRegistry() public {
     owner = msg.sender;
   }
 
-  function addVerifier(address _newVerifier) public onlyByOwner {
-    verifiers.push(_newVerifier) - 1;
-    verifierCount++;
+  function findAll() public view returns (address[]) {
+    return verifiers;
   }
 
-  function findAll() public constant returns (address[]) {
-    return verifiers;
+  function addVerifier(address _newWallet, address _newVerifier) public onlyByOwner {
+    verifierMap[_newWallet] = _newVerifier;
+    verifiers.push(_newVerifier) - 1;
+  }
+
+  function findOne(address _wallet) public constant returns (address) {
+    return verifierMap[_wallet];
   }
 }

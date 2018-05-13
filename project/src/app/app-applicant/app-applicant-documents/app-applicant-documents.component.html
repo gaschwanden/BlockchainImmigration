@@ -1,3 +1,4 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px' }"></ngx-loading>
 <div class="row">
   <div class="col-3">
     <div class="list-group">
@@ -14,22 +15,79 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-4" *ngFor="let artifact of artifacts">
+      <div class="col-4">
         <div class="card" style="width: 18rem;">
           <div class="card-body">
-            <h5 class="card-title">{{artifact.tx}}</h5>
-            <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-              content.</p>
-            <button type="button" class="btn btn-danger" (click)="onDeleteClick()">Delete</button>
+            <form #addDocumentFrm="ngForm" (ngSubmit)="onUploadClick(addDocumentFrm.value)" novalidate>
+              <div class="form-group">
+                <label for="documentName">Document Name:</label>
+                <input type="text" class="form-control" id="documentName" name="documentName" ngModel
+                       required #documentName="ngModel">
+                <div *ngIf="documentName.invalid && (documentName.dirty || documentName.touched)"
+                     class="alert alert-danger">
+                  <div *ngIf="documentName.errors.required">
+                    Document Name is required.
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="document">Document</label>
+                <input type="file" id="document" name="document" ngModel
+                       required #document="ngModel">
+                <div *ngIf="document.invalid && (document.dirty || document.touched)"
+                     class="alert alert-danger">
+                  <div *ngIf="document.errors.required">
+                    Document is required.
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="documentType">Document Type</label>
+                <select class='select-option' id="documentType" name="documentType" ngModel
+                        required #documentType="ngModel">
+                  <option class='option' *ngFor='let docType of docTypes' [value]="docType">{{docType}}</option>
+                </select>
+                <div *ngIf="documentType.invalid && (documentType.dirty || documentType.touched)"
+                     class="alert alert-danger">
+                  <div *ngIf="documentType.errors.required">
+                    Document Type is required.
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="verifier">Verifier</label>
+                <select class='select-option' id="verifier" name="verifier" ngModel
+                        required #verifier="ngModel">
+                  <option class='option' *ngFor='let verifier of verifiers' [value]="verifier.wallet">
+                    {{verifier.name}}
+                  </option>
+                </select>
+                <div *ngIf="verifier.invalid && (verifier.dirty || verifier.touched)"
+                     class="alert alert-danger">
+                  <div *ngIf="verifier.errors.required">
+                    Verifier is required.
+                  </div>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-danger" [disabled]="!addDocumentFrm.form.valid">Upload</button>
+            </form>
           </div>
         </div>
       </div>
-      <div class="col-4">
+      <div class="col-4" *ngFor="let artifact of artifacts">
         <div class="card" style="width: 18rem;">
-          <img class="fas fa-plus-circle">
           <div class="card-body">
-            <button type="button" class="btn btn-primary" (click)="onUploadClick()">Upload</button>
+            <h5 class="card-title">{{artifact.name}} - {{artifact.isVerified ? "Verified" : "Not Verified"}}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">{{artifact.address}}</h6>
+            <p class="card-text">
+              IPFS Hash: {{artifact.ipfsHash}}
+            </p>
+            <p class="card-text">
+              Type: {{artifact.type}}
+            </p>
+            <p class="card-text">
+              Verifier: {{artifact.verifierName}} ({{artifact.verifier}})
+            </p>
           </div>
         </div>
       </div>

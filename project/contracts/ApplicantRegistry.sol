@@ -21,11 +21,11 @@ contract ApplicantRegistry is Owned {
     applicant_status[_applicant] = _active;
   }
 
-  function getApplicantStatus(address _applicant) public constant returns (bool) {
+  function getApplicantStatus(address _applicant) public view returns (bool) {
     return applicant_status[_applicant];
   }
 
-  function findOne(uint idx) public constant returns (address){
-    return applicants[idx];
+  function getApplicants() public view returns (address[]) {
+    return applicants;
   }
 }

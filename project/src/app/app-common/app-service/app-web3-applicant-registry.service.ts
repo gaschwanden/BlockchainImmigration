@@ -54,14 +54,13 @@ export class AppWeb3ApplicantRegistryService {
     return Observable.create(observer => {
       this.APPLICANT_REGISTRY
         .deployed()
-        .then(registry => {
-          const total = registry.applicantCount();
-          for (let i = 0; i < total; i++) {
-            registry.findOne(i)
-              .then(observer.next)
-              .catch(observer.error);
+        .then(registry => registry.getApplicants({from: ethAddress}))
+        .then(addresses => {
+          if (addresses.length > 0) {
+            addresses.forEach(address => observer.next(address));
           }
-        }).catch(observer.error);
+        })
+        .catch(observer.error);
     });
   }
 }

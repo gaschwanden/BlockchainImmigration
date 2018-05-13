@@ -62,7 +62,7 @@
         <div class="card" style="width: 18rem;">
           <div class="card-body">
             <h5 class="card-title">{{verifier.name}} - {{verifier.status ? 'Enabled' : 'Disabled'}}</h5>
-            <h6 class="card-subtitle mb-2 text-muted">{{verifier.address}}</h6>
+            <h6 class="card-subtitle mb-2 text-muted">{{verifier.wallet}}</h6>
             <p class="card-text">Document Type</p>
             <ul>
               <li *ngFor="let docType of verifier.docTypes">{{docType}}</li>

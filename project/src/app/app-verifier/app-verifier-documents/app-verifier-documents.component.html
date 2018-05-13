@@ -1,3 +1,4 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px' }"></ngx-loading>
 <div class="row">
   <div class="col-lg">
     <h2>Welcome {{ethAddress}} - {{role}}</h2>
@@ -9,11 +10,17 @@
       <div class="col-4" *ngFor="let artifact of artifacts">
         <div class="card" style="width: 18rem;">
           <div class="card-body">
-            <h5 class="card-title">{{artifact.tx}}</h5>
-            <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-              content.</p>
-            <button type="button" class="btn btn-danger" (click)="onDisableClick()">Delete</button>
+            <h5 class="card-title">{{artifact.name}} - {{artifact.isVerified ? "Verified" : "Not Verified"}}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">{{artifact.address}}</h6>
+            <p class="card-text">
+              IPFS Hash: {{artifact.ipfsHash}}
+            </p>
+            <p class="card-text">
+              Type: {{artifact.type}}
+            </p>
+            <button *ngIf="!artifact.isVerified" type="button" class="btn btn-danger"
+                    (click)="onVerifyClick(artifact)">Verify
+            </button>
           </div>
         </div>
       </div>

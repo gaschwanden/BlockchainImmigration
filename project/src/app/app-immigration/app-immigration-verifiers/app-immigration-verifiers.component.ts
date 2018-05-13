@@ -41,7 +41,7 @@ export class AppImmigrationVerifiersComponent implements OnInit {
     this.loading = true;
     let verifier = new VerifierEntity();
     verifier.name = data.verifierName;
-    verifier.address = data.verifierAddress;
+    verifier.wallet = data.verifierAddress;
     this.docTypes.forEach(docType => {
       if (data[docType] === true) {
         verifier.docTypes.push(docType);

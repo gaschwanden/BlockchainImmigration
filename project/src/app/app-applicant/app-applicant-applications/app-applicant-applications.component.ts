@@ -10,6 +10,7 @@ export class AppApplicantApplicationsComponent implements OnInit {
   applications = [];
   role: string;
   ethAddress: string;
+  loading = false;
 
   constructor(private appWeb3ApplicationSvc: AppWeb3ApplicationService) {
     this.ethAddress = localStorage.getItem('ethAddress');
@@ -17,29 +18,35 @@ export class AppApplicantApplicationsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.loading = true;
     this.appWeb3ApplicationSvc
       .findAll(this.ethAddress)
       .subscribe(
         application => {
+          this.loading = false;
           this.applications.push(application);
         },
         error => {
+          this.loading = false;
           console.error("Unable to find all application", error);
           alert(error);
           this.applications = [];
-        });
+        }, () => this.loading = false);
   }
 
   onCreateClick() {
+    this.loading = true;
     this.appWeb3ApplicationSvc
       .create(this.ethAddress)
       .subscribe(
         application => {
+          this.loading = false;
           this.applications.push(application);
         },
         error => {
           alert(error);
+          this.loading = false;
           console.error("Unable to create new application", error)
-        });
+        }, () => this.loading = false);
   }
 }
