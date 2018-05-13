@@ -21,20 +21,15 @@ export class AppWeb3ApplicationService {
 
   create(ethAddress: string): Observable<any> {
     return Observable.create(observer => {
+      let application;
       this.APPLICATION
-        .new({
-          from: ethAddress
+        .new({from: ethAddress})
+        .then(instance => {
+          application = instance;
+          return this.USER_APPLICATIONS.deployed();
         })
-        .then(application => {
-          this.USER_APPLICATIONS
-            .deployed()
-            .then(registry => {
-              registry.registerApplication(application.address, {from: ethAddress})
-                .then(result => observer.next(application))
-                .catch(error => observer.error(error));
-            })
-            .catch(error => observer.error(error));
-        })
+        .then(registry => registry.registerApplication(application.address, {from: ethAddress}))
+        .then(result => observer.next(application))
         .catch(error => observer.error(error));
     });
   }
@@ -45,13 +40,8 @@ export class AppWeb3ApplicationService {
     return Observable.create(observer => {
       this.USER_APPLICATIONS
         .deployed()
-        .then(registry => {
-          registry.findUserApplications(ethAddress, {from: ethAddress})
-            .then(addresses => {
-              addresses.forEach(address => observer.next(this.APPLICATION.at(address)));
-            })
-            .catch(error => observer.error(error));
-        })
+        .then(registry => registry.findAllApplications({from: ethAddress}))
+        .then(addresses => addresses.forEach(address => observer.next(this.APPLICATION.at(address))))
         .catch(error => observer.error(error));
     });
   }

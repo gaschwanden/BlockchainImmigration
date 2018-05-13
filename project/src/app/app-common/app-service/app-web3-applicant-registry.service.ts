@@ -32,9 +32,7 @@ export class AppWeb3ApplicantRegistryService {
     return Observable.create(observer => {
       this.APPLICANT_REGISTRY
         .deployed()
-        .then(registry => {
-          return registry.addApplicant(ethAddress, {from: ethAddress});
-        })
+        .then(registry => registry.addApplicant(ethAddress, {from: ethAddress}))
         .then(result => observer.next(true))
         .catch(error => observer.error(error));
     });

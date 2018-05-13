@@ -10,11 +10,42 @@
     <div class="row">
       <div class="row">
         <div class="col-lg">
-          <h2>Welcome {{ethAddress}} - {{role}}</h2>
+          <h2>Welcome {{ethAddress}}</h2>
         </div>
       </div>
     </div>
     <div class="row">
+      <div class="col-4">
+        <div class="card" style="width: 18rem;">
+          <div class="card-body">
+            <form #addVisaFrm="ngForm" (ngSubmit)="onAddClick(addVisaFrm.value)" novalidate>
+              <div class="form-group">
+                <label for="visaName">Visa Name:</label>
+                <input type="text" class="form-control" id="visaName" name="visaName" ngModel
+                       required #visaName="ngModel">
+                <div *ngIf="visaName.invalid && (visaName.dirty || visaName.touched)"
+                     class="alert alert-danger">
+                  <div *ngIf="visaName.errors.required">
+                    Visa name is required.
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="visaCode">Visa Code:</label>
+                <input type="text" class="form-control" id="visaCode" name="visaCode" ngModel
+                       required #visaCode="ngModel">
+                <div *ngIf="visaCode.invalid && (visaCode.dirty || visaCode.touched)"
+                     class="alert alert-danger">
+                  <div *ngIf="visaCode.errors.required">
+                    Visa Code is required.
+                  </div>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary" [disabled]="!addVisaFrm.form.valid">Add</button>
+            </form>
+          </div>
+        </div>
+      </div>
       <div class="col-4" *ngFor="let visa of visas">
         <div class="card" style="width: 18rem;">
           <div class="card-body">
@@ -22,15 +53,7 @@
             <h6 class="card-subtitle mb-2 text-muted">{{visa.address}}</h6>
             <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
               content.</p>
-            <button type="button" class="btn btn-danger" (click)="onDeleteClick()">Delete</button>
-          </div>
-        </div>
-      </div>
-      <div class="col-4">
-        <div class="card" style="width: 18rem;">
-          <img class="glyphicons glyphicons-plus-sign">
-          <div class="card-body">
-            <button type="button" class="btn btn-primary" (click)="onAddClick()">Add</button>
+            <button type="button" class="btn btn-danger" (click)="onDisableClick()">Disable</button>
           </div>
         </div>
       </div>

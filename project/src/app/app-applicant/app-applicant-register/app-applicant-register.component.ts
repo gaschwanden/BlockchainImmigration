@@ -19,8 +19,7 @@ export class AppApplicantRegisterComponent {
       .subscribe(result => {
           if (result) {
             alert("User registered successfully");
-            this.router.navigateByUrl("/applicant/login");
-
+            this.router.navigateByUrl("/applicant");
           } else {
             alert("Error registering the user, please try again.");
           }

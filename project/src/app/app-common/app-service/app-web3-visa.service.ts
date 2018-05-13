@@ -4,6 +4,7 @@ import * as Visa from '../../../../build/contracts/Visa.json';
 import * as VisaRegistry from '../../../../build/contracts/VisaRegistry.json';
 import * as TruffleContract from 'truffle-contract';
 import {Observable} from "rxjs/Observable";
+import {VisaEntity} from "../app-domain/app-visa";
 
 declare var window: any;
 
@@ -19,18 +20,16 @@ export class AppWeb3VisaService {
   }
 
   create(ethAddress: string, visaCode: string, visaName: string): Observable<any> {
-    let hexVisaCode = this.appWeb3Svc.toHex(visaCode);
-    let hexVisaName = this.appWeb3Svc.toHex(visaName);
     return Observable.create(observer => {
-      let visaAddress;
+      let visa;
       this.VISA
         .new(visaCode, visaName, {from: ethAddress})
-        .then(visa => {
-          visaAddress = visa.address;
+        .then(instance => {
+          visa = instance;
           return this.VISA_REGISTRY.deployed()
         })
-        .then(registry => registry.addVisa(visaCode, visaAddress, {from: ethAddress}))
-        .then(result => observer.next(result))
+        .then(registry => registry.addVisa(visaCode, visa.address, {from: ethAddress}))
+        .then(result => observer.next(this.toVisaEntity(visa.address)))
         .catch(error => observer.error(error));
     });
   }
@@ -40,9 +39,22 @@ export class AppWeb3VisaService {
       this.VISA_REGISTRY
         .deployed()
         .then(registry => registry.findAll({from: ethAddress}))
-        .then(addresses => addresses.forEach(address => this.VISA.at(observer.next(address))))
+        .then(addresses => addresses.forEach(address => observer.next(this.toVisaEntity(address))))
         .catch(error => observer.error(error));
     });
+  }
+
+  private toVisaEntity(address: string): VisaEntity {
+    let truffleVisa = this.VISA.at(address);
+    let visa = new VisaEntity();
+    truffleVisa.visa_name()
+      .then(value => visa.name = this.appWeb3Svc.toString(value))
+      .catch(error => console.log("Unable to set visa name", error));
+    truffleVisa.visa_code()
+      .then(value => visa.code = this.appWeb3Svc.toString(value))
+      .catch(error => console.log("Unable to set visa code", error));
+    visa.address = truffleVisa.address;
+    return visa;
   }
 
   findBy(visaCode: string, ethAddress: string): Observable<any[]> {

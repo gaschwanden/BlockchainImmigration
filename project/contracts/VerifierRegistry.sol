@@ -3,7 +3,7 @@ pragma solidity ^0.4.21;
 import "./Owned.sol";
 
 contract VerifierRegistry is Owned {
-  address[] public verifiers;
+  address[] verifiers;
   mapping(address => bool) public verifier_status;
   uint public verifierCount;
 
@@ -27,5 +27,9 @@ contract VerifierRegistry is Owned {
 
   function findOne(uint idx) public constant returns (address) {
     return verifiers[idx];
+  }
+
+  function findAll() public constant returns (address[]) {
+    return verifiers;
   }
 }

@@ -32,11 +32,8 @@ export class AppWeb3VerifierRegistryService {
     return Observable.create(observer => {
       this.VERIFIER_REGISTRY
         .deployed()
-        .then(registry => {
-          return registry.findAll({from: ethAddress});
-        })
-        .then(addresses =>
-          addresses.forEach(address => observer.next(address)))
+        .then(registry => registry.findAll({from: ethAddress}))
+        .then(addresses => addresses.forEach(address => observer.next(address)))
         .catch(error => observer.error(error));
     });
   }
@@ -45,9 +42,7 @@ export class AppWeb3VerifierRegistryService {
     return Observable.create(observer => {
       this.VERIFIER_REGISTRY
         .deployed()
-        .then(registry => {
-          return registry.addApplicant(ethAddress, {from: ethAddress});
-        })
+        .then(registry => registry.addVerifier(ethAddress, {from: ethAddress}))
         .then(result => observer.next(true))
         .catch(error => observer.error(error));
     });
@@ -57,9 +52,7 @@ export class AppWeb3VerifierRegistryService {
     return Observable.create(observer => {
       this.VERIFIER_REGISTRY
         .deployed()
-        .then(registry => {
-          return registry.changeStatus(ethAddress, active, {from: ethAddress});
-        })
+        .then(registry => registry.changeStatus(ethAddress, active, {from: ethAddress}))
         .then(result => observer.next(true))
         .catch(error => observer.error(error));
     });

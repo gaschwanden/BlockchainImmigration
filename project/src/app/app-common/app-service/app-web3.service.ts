@@ -39,6 +39,11 @@ export class AppWeb3Service {
     return this.web3.toHex(value);
   }
 
+  toString(hex: string): string {
+    return this.web3.toUtf8(hex);
+  }
+
+
   isAddress(ethAddress: string): boolean {
     if (this.web3) {
       return this.web3.isAddress(ethAddress);

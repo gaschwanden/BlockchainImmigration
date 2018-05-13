@@ -22,9 +22,9 @@ export class AppImmigrationVerifiersComponent implements OnInit {
         error => alert("Unable to find verifiers: " + error));
   }
 
-  onAddClick(data) {
+  onAddClick() {
     this.appWeb3VerifierRegistrySvc
-      .addVerifier(data.ethAddress)
+      .addVerifier(this.ethAddress)
       .subscribe(verifier => this.verifiers.push(verifier),
         error => alert("Unable to add the verifier: " + error));
   }

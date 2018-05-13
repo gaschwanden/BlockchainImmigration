@@ -2,7 +2,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {FormsModule} from '@angular/forms';
-
+import {AngularFontAwesomeModule} from 'angular-font-awesome';
 
 import {AppComponent} from './app.component';
 import {AppNavbarComponent} from './app-common/app-navbar/app-navbar.component';
@@ -69,7 +69,8 @@ const APP_ROUTES: Routes = [
       {enableTracing: true} // <-- debugging purposes only
     ),
     FormsModule,
-    BrowserModule
+    BrowserModule,
+    AngularFontAwesomeModule
   ],
   providers: [
     AppWeb3Service,
