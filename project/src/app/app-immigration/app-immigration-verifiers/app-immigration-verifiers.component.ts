@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {AppWeb3VerifierService} from "../../app-common/app-service/app-web3-verifier.service";
 import {VerifierEntity} from "../../app-common/app-domain/app-verifier";
+import {environment} from "../../../environments/environment";
 
 @Component({
   selector: 'app-app-immigration-verifiers',
@@ -10,11 +11,14 @@ import {VerifierEntity} from "../../app-common/app-domain/app-verifier";
 export class AppImmigrationVerifiersComponent implements OnInit {
   verifiers: any[] = [];
   ethAddress: string;
-  public loading = false;
-  docTypes = ["PROFESSIONAL", "PERSONAL", "OTHERS"];
+  loading = false;
+  role: string;
+  docTypes: string[];
 
   constructor(private appWeb3VerifierSvc: AppWeb3VerifierService) {
     this.ethAddress = localStorage.getItem("ethAddress");
+    this.role = localStorage.getItem('role');
+    this.docTypes = environment.docTypes;
   }
 
   ngOnInit() {

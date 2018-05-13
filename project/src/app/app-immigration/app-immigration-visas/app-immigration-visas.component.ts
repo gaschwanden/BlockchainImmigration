@@ -11,9 +11,11 @@ export class AppImmigrationVisasComponent implements OnInit {
   visas: VisaEntity[] = [];
   ethAddress: string;
   loading = false;
+  role: string;
 
   constructor(private appWeb3VisaSvc: AppWeb3VisaService) {
     this.ethAddress = localStorage.getItem('ethAddress');
+    this.role = localStorage.getItem('role');
   }
 
   ngOnInit() {

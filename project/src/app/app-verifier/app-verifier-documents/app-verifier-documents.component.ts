@@ -9,9 +9,11 @@ import {AppWeb3ArtifactService} from "../../app-common/app-service/app-web3-arti
 export class AppVerifierDocumentsComponent implements OnInit {
   ethAddress: string;
   artifacts = [];
+  role: string;
 
   constructor(private appWeb3ArtifactSvc: AppWeb3ArtifactService) {
     this.ethAddress = localStorage.getItem('ethAddress');
+    this.role = localStorage.getItem('role');
   }
 
   ngOnInit() {

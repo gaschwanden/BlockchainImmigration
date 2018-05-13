@@ -10,9 +10,11 @@ export class AppImmigrationApplicationsComponent implements OnInit {
   applications = [];
   ethAddress: string;
   loading = false;
+  role: string;
 
   constructor(private appWeb3ApplicationSvc: AppWeb3ApplicationService) {
     this.ethAddress = localStorage.getItem('ethAddress');
+    this.role = localStorage.getItem('role');
   }
 
   ngOnInit() {

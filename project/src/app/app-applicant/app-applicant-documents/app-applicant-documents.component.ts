@@ -8,11 +8,12 @@ import {AppWeb3ArtifactService} from "../../app-common/app-service/app-web3-arti
 })
 export class AppApplicantDocumentsComponent implements OnInit {
   ethAddress: string;
-  role: any;
+  role: string;
   artifacts = [];
 
   constructor(private appWeb3ArtifactSvc: AppWeb3ArtifactService) {
     this.ethAddress = localStorage.getItem('ethAddress');
+    this.role = localStorage.getItem('role');
   }
 
   ngOnInit() {

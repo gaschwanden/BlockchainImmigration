@@ -8,10 +8,12 @@ import {AppWeb3ApplicationService} from "../../app-common/app-service/app-web3-a
 })
 export class AppApplicantApplicationsComponent implements OnInit {
   applications = [];
+  role: string;
   ethAddress: string;
 
   constructor(private appWeb3ApplicationSvc: AppWeb3ApplicationService) {
     this.ethAddress = localStorage.getItem('ethAddress');
+    this.role = localStorage.getItem('role');
   }
 
   ngOnInit() {
