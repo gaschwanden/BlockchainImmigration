@@ -21,7 +21,7 @@ import {AppImmigrationApplicationsComponent} from "./app-immigration/app-immigra
 import {AppWeb3VisaService} from "./app-common/app-service/app-web3-visa.service";
 import {AppWeb3ApplicantRegistryService} from "./app-common/app-service/app-web3-applicant-registry.service";
 import {AppWeb3AdminRegistryService} from "./app-common/app-service/app-web3-admin-registry.service";
-import {AppWeb3VerifierRegistryService} from "./app-common/app-service/app-web3-verifier-registry.service";
+import {AppWeb3VerifierService} from "./app-common/app-service/app-web3-verifier.service";
 import {AppImmigrationVerifiersComponent} from "./app-immigration/app-immigration-verifiers/app-immigration-verifiers.component";
 import {AppImmigrationVisasComponent} from "./app-immigration/app-immigration-visas/app-immigration-visas.component";
 import {LoadingModule} from "ngx-loading";
@@ -78,7 +78,7 @@ const APP_ROUTES: Routes = [
     AppWeb3ApplicationService,
     AppWeb3AdminRegistryService,
     AppWeb3ApplicantRegistryService,
-    AppWeb3VerifierRegistryService,
+    AppWeb3VerifierService,
     AppWeb3VisaService
   ],
   bootstrap: [AppComponent]

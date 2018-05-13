@@ -61,13 +61,18 @@
       <div class="col-4" *ngFor="let verifier of verifiers">
         <div class="card" style="width: 18rem;">
           <div class="card-body">
-            <h5 class="card-title">{{verifier.name}}</h5>
+            <h5 class="card-title">{{verifier.name}} - {{verifier.status ? 'Enabled' : 'Disabled'}}</h5>
             <h6 class="card-subtitle mb-2 text-muted">{{verifier.address}}</h6>
             <p class="card-text">Document Type</p>
             <ul>
               <li *ngFor="let docType of verifier.docTypes">{{docType}}</li>
             </ul>
-            <button type="button" class="btn btn-danger" (click)="onDisableClick()">Disable</button>
+            <button *ngIf="verifier.status" type="button" class="btn btn-danger"
+                    (click)="onStatusClick(verifier.address, false)">Disable
+            </button>
+            <button *ngIf="!verifier.status" type="button" class="btn btn-success"
+                    (click)="onStatusClick(verifier.address, true)">Enable
+            </button>
           </div>
         </div>
       </div>

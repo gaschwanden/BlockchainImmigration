@@ -28,7 +28,8 @@ export class AppImmigrationVisasComponent implements OnInit {
         error => {
           this.loading = false;
           alert("Unable to find all visas: " + error);
-        });
+        },
+        () => this.loading = false);
   }
 
   onAddClick(data) {
@@ -42,7 +43,8 @@ export class AppImmigrationVisasComponent implements OnInit {
         error => {
           this.loading = false;
           alert("Unable to create visa: " + error);
-        });
+        },
+        () => this.loading = false);
   }
 
   onDisableClick() {

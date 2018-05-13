@@ -29,7 +29,7 @@ export class AppWeb3VisaService {
           return this.VISA_REGISTRY.deployed()
         })
         .then(registry => registry.addVisa(visaCode, visa.address, {from: ethAddress}))
-        .then(result => observer.next(this.toVisaEntity(visa.address)))
+        .then(result => observer.next(this.toVisaEntity(visa)))
         .catch(error => observer.error(error));
     });
   }
@@ -39,22 +39,15 @@ export class AppWeb3VisaService {
       this.VISA_REGISTRY
         .deployed()
         .then(registry => registry.findAll({from: ethAddress}))
-        .then(addresses => addresses.forEach(address => observer.next(this.toVisaEntity(address))))
+        .then(addresses => {
+          if (addresses.length > 0) {
+            addresses.forEach(address => observer.next(this.addressToVisaEntity(address)));
+          } else {
+            observer.complete();
+          }
+        })
         .catch(error => observer.error(error));
     });
-  }
-
-  private toVisaEntity(address: string): VisaEntity {
-    let truffleVisa = this.VISA.at(address);
-    let visa = new VisaEntity();
-    truffleVisa.visa_name()
-      .then(value => visa.name = this.appWeb3Svc.toString(value))
-      .catch(error => console.log("Unable to set visa name", error));
-    truffleVisa.visa_code()
-      .then(value => visa.code = this.appWeb3Svc.toString(value))
-      .catch(error => console.log("Unable to set visa code", error));
-    visa.address = truffleVisa.address;
-    return visa;
   }
 
   findBy(visaCode: string, ethAddress: string): Observable<any[]> {
@@ -64,12 +57,29 @@ export class AppWeb3VisaService {
         .then(registry => {
           registry.findBy(visaCode, {from: ethAddress})
             .then(address => {
-              observer.next(this.VISA.at(address));
+              observer.next(this.addressToVisaEntity(address));
             })
             .catch(error => observer.error(error));
         })
         .catch(error => observer.error(error));
     });
+  }
+
+  private addressToVisaEntity(address: string): VisaEntity {
+    let truffleVisa = this.VISA.at(address);
+    return this.toVisaEntity(truffleVisa)
+  }
+
+  private toVisaEntity(truffleVisa: any): VisaEntity {
+    let visa = new VisaEntity();
+    truffleVisa.visa_name()
+      .then(value => visa.name = this.appWeb3Svc.toString(value))
+      .catch(error => console.log("Unable to set visa name", error));
+    truffleVisa.visa_code()
+      .then(value => visa.code = this.appWeb3Svc.toNumber(value))
+      .catch(error => console.log("Unable to set visa code", error));
+    visa.address = truffleVisa.address;
+    return visa;
   }
 }
 

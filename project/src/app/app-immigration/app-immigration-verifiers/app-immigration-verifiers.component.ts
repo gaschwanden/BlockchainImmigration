@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {AppWeb3VerifierRegistryService} from "../../app-common/app-service/app-web3-verifier-registry.service";
+import {AppWeb3VerifierService} from "../../app-common/app-service/app-web3-verifier.service";
+import {VerifierEntity} from "../../app-common/app-domain/app-verifier";
 
 @Component({
   selector: 'app-app-immigration-verifiers',
@@ -7,19 +8,19 @@ import {AppWeb3VerifierRegistryService} from "../../app-common/app-service/app-w
   styleUrls: ['./app-immigration-verifiers.component.css']
 })
 export class AppImmigrationVerifiersComponent implements OnInit {
-  verifiers: any[];
+  verifiers: any[] = [];
   ethAddress: string;
   public loading = false;
-  docTypes = ["PROFESSIONAL", "PERSONAL"];
+  docTypes = ["PROFESSIONAL", "PERSONAL", "OTHERS"];
 
-  constructor(private appWeb3VerifierRegistrySvc: AppWeb3VerifierRegistryService) {
+  constructor(private appWeb3VerifierSvc: AppWeb3VerifierService) {
     this.ethAddress = localStorage.getItem("ethAddress");
   }
 
   ngOnInit() {
     this.loading = true;
     //TODO we need a verifier contract
-    this.appWeb3VerifierRegistrySvc
+    this.appWeb3VerifierSvc
       .findAll(this.ethAddress)
       .subscribe(verifier => {
           this.loading = false;
@@ -28,28 +29,46 @@ export class AppImmigrationVerifiersComponent implements OnInit {
         error => {
           alert("Unable to find verifiers: " + error)
           this.loading = false;
-        });
+        },
+        () => this.loading = false);
   }
 
   onAddClick(data) {
     this.loading = true;
-    this.appWeb3VerifierRegistrySvc
-      .addVerifier(data.verifierAddress, this.ethAddress)
-      .subscribe(this.addVerifier, this.showError);
+    let verifier = new VerifierEntity();
+    verifier.name = data.verifierName;
+    verifier.address = data.verifierAddress;
+    this.docTypes.forEach(docType => {
+      if (data[docType] === true) {
+        verifier.docTypes.push(docType);
+      }
+    });
+    this.appWeb3VerifierSvc
+      .addVerifier(verifier, this.ethAddress)
+      .subscribe(verifier => {
+          this.loading = false;
+          this.verifiers.push(verifier);
+        }, error => {
+          this.loading = false;
+          alert("Unable to add the verifier: " + error);
+        },
+        () => this.loading = false);
   }
 
-  private showError(error: any) {
-    this.loading = false;
-    alert("Unable to add the verifier: " + error);
-  }
-
-  private addVerifier(verifier: any) {
-    this.loading = false;
-    this.verifiers.push(verifier);
-  }
-
-  onDeleteClick() {
-    alert("Not implemented");
+  onStatusClick(verifierAddress: string, status: boolean) {
+    this.loading = true;
+    this.appWeb3VerifierSvc
+      .changeStatus(verifierAddress, status, this.ethAddress)
+      .subscribe(success => {
+          this.loading = false;
+          this.verifiers
+            .filter(verifier => verifier.address === verifierAddress)[0]
+            .status = status;
+        }, error => {
+          this.loading = false;
+          alert("Unable to change the status verifier: " + error);
+        },
+        () => this.loading = false);
   }
 
 }

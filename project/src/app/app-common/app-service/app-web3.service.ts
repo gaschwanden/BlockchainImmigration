@@ -43,6 +43,10 @@ export class AppWeb3Service {
     return this.web3.toUtf8(hex);
   }
 
+  toNumber(hex: string): string {
+    return this.web3.toDecimal(hex);
+  }
+
 
   isAddress(ethAddress: string): boolean {
     if (this.web3) {

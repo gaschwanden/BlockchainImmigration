@@ -1,3 +1,4 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px' }"></ngx-loading>
 <div class="panel panel-default">
   <div class="panel-body">
     <form #loginFrm="ngForm" (ngSubmit)="onClickSubmit(loginFrm.value)" novalidate>

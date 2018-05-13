@@ -28,7 +28,8 @@ export class AppImmigrationApplicationsComponent implements OnInit {
           this.loading = false;
           alert("Unable to find all application for: " + this.ethAddress + "\n" + error);
           this.applications = [];
-        });
+        },
+        () => this.loading = false);
   }
 }
 

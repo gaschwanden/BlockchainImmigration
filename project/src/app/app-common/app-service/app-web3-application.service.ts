@@ -41,7 +41,12 @@ export class AppWeb3ApplicationService {
       this.USER_APPLICATIONS
         .deployed()
         .then(registry => registry.findAllApplications({from: ethAddress}))
-        .then(addresses => addresses.forEach(address => observer.next(this.APPLICATION.at(address))))
+        .then(addresses => {
+          if (addresses.length > 0) {
+            addresses.forEach(address => observer.next(this.APPLICATION.at(address)))
+          }
+          observer.complete();
+        })
         .catch(error => observer.error(error));
     });
   }
