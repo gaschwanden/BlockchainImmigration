@@ -10,30 +10,38 @@ import {VisaEntity} from "../../app-common/app-domain/app-visa";
 export class AppImmigrationVisasComponent implements OnInit {
   visas: VisaEntity[] = [];
   ethAddress: string;
+  loading = false;
 
   constructor(private appWeb3VisaSvc: AppWeb3VisaService) {
     this.ethAddress = localStorage.getItem('ethAddress');
   }
 
   ngOnInit() {
+    this.loading = true;
     this.appWeb3VisaSvc
       .findAll(this.ethAddress)
       .subscribe(
         visa => {
+          this.loading = false;
           this.visas.push(visa);
         },
-        error => console.error("Unable to find all visas", error));
+        error => {
+          this.loading = false;
+          alert("Unable to find all visas: " + error);
+        });
   }
 
   onAddClick(data) {
+    this.loading = true;
     this.appWeb3VisaSvc
       .create(this.ethAddress, data.visaCode, data.visaName)
       .subscribe(instance => {
-          console.log(instance);
+          this.loading = false;
           this.visas.push(instance);
         },
         error => {
-          console.log("Unable to create visa", error);
+          this.loading = false;
+          alert("Unable to create visa: " + error);
         });
   }
 

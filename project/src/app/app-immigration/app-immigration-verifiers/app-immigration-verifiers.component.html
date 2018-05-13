@@ -1,3 +1,4 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px' }"></ngx-loading>
 <div class="row">
   <div class="col-3">
     <div class="list-group">
@@ -10,27 +11,63 @@
     <div class="row">
       <div class="row">
         <div class="col-lg">
-          <h2>Welcome {{ethAddress}} - {{role}}</h2>
+          <h2>Welcome {{ethAddress}}</h2>
         </div>
       </div>
     </div>
     <div class="row">
-      <div class="col-4" *ngFor="let verifier of verifiers">
+      <div class="col-4">
         <div class="card" style="width: 18rem;">
           <div class="card-body">
-            <h5 class="card-title">{{verifier.address}}</h5>
-            <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-              content.</p>
-            <button type="button" class="btn btn-danger" (click)="onDeleteClick()">Delete</button>
+            <form #addVerifierFrm="ngForm" (ngSubmit)="onAddClick(addVerifierFrm.value)" novalidate>
+              <div class="form-group">
+                <label for="verifierAddress">Verifier ETH Address (ERC-20 Compatible):</label>
+                <input type="text" class="form-control" id="verifierAddress" name="verifierAddress" ngModel
+                       required #verifierAddress="ngModel" invalidEthAddress>
+                <div *ngIf="verifierAddress.invalid && (verifierAddress.dirty || verifierAddress.touched)"
+                     class="alert alert-danger">
+                  <div *ngIf="verifierAddress.errors.required">
+                    ETH Address is required.
+                  </div>
+                  <div *ngIf="verifierAddress.errors.invalidEthAddress">
+                    ETH Address is invalid.
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="verifierName">Name:</label>
+                <input type="text" class="form-control" id="verifierName" name="verifierName" ngModel
+                       required #verifierName="ngModel">
+                <div *ngIf="verifierName.invalid && (verifierName.dirty || verifierName.touched)"
+                     class="alert alert-danger">
+                  <div *ngIf="verifierName.errors.required">
+                    First name is required.
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Document Type</label>
+                <div class="form-check" *ngFor="let docType of docTypes">
+                  <input type="checkbox" class="form-check-input" id="{{docType}}" name="{{docType}}"
+                         value="{{docType}}" ngModel>
+                  <label class="form-check-label" for="{{docType}}">{{docType}}</label>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-default" [disabled]="!addVerifierFrm.form.valid">Add</button>
+            </form>
           </div>
         </div>
       </div>
-      <div class="col-4">
+      <div class="col-4" *ngFor="let verifier of verifiers">
         <div class="card" style="width: 18rem;">
-          <i class="fab fa-google-plus-circle"></i>
           <div class="card-body">
-            <button type="button" class="btn btn-primary" (click)="onAddClick()">Add</button>
+            <h5 class="card-title">{{verifier.name}}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">{{verifier.address}}</h6>
+            <p class="card-text">Document Type</p>
+            <ul>
+              <li *ngFor="let docType of verifier.docTypes">{{docType}}</li>
+            </ul>
+            <button type="button" class="btn btn-danger" (click)="onDisableClick()">Disable</button>
           </div>
         </div>
       </div>

@@ -9,20 +9,24 @@ import {AppWeb3ApplicationService} from "../../app-common/app-service/app-web3-a
 export class AppImmigrationApplicationsComponent implements OnInit {
   applications = [];
   ethAddress: string;
+  loading = false;
 
   constructor(private appWeb3ApplicationSvc: AppWeb3ApplicationService) {
     this.ethAddress = localStorage.getItem('ethAddress');
   }
 
   ngOnInit() {
+    this.loading = true;
     this.appWeb3ApplicationSvc
       .findAll(this.ethAddress)
       .subscribe(
         application => {
+          this.loading = false;
           this.applications.push(application);
         },
         error => {
-          console.error("Unable to find all application for: " + this.ethAddress, error);
+          this.loading = false;
+          alert("Unable to find all application for: " + this.ethAddress + "\n" + error);
           this.applications = [];
         });
   }

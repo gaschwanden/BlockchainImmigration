@@ -2,7 +2,6 @@ import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {FormsModule} from '@angular/forms';
-import {AngularFontAwesomeModule} from 'angular-font-awesome';
 
 import {AppComponent} from './app.component';
 import {AppNavbarComponent} from './app-common/app-navbar/app-navbar.component';
@@ -25,6 +24,7 @@ import {AppWeb3AdminRegistryService} from "./app-common/app-service/app-web3-adm
 import {AppWeb3VerifierRegistryService} from "./app-common/app-service/app-web3-verifier-registry.service";
 import {AppImmigrationVerifiersComponent} from "./app-immigration/app-immigration-verifiers/app-immigration-verifiers.component";
 import {AppImmigrationVisasComponent} from "./app-immigration/app-immigration-visas/app-immigration-visas.component";
+import {LoadingModule} from "ngx-loading";
 
 const APP_ROUTES: Routes = [
   {path: '', component: AppHomeComponent},
@@ -70,7 +70,7 @@ const APP_ROUTES: Routes = [
     ),
     FormsModule,
     BrowserModule,
-    AngularFontAwesomeModule
+    LoadingModule
   ],
   providers: [
     AppWeb3Service,

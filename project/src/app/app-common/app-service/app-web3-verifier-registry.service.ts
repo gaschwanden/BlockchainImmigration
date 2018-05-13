@@ -38,11 +38,11 @@ export class AppWeb3VerifierRegistryService {
     });
   }
 
-  addVerifier(ethAddress: string): Observable<boolean> {
+  addVerifier(verifierAddress: string, ethAddress: string): Observable<boolean> {
     return Observable.create(observer => {
       this.VERIFIER_REGISTRY
         .deployed()
-        .then(registry => registry.addVerifier(ethAddress, {from: ethAddress}))
+        .then(registry => registry.addVerifier(verifierAddress, {from: ethAddress}))
         .then(result => observer.next(true))
         .catch(error => observer.error(error));
     });
