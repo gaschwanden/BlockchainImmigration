@@ -55,18 +55,22 @@ export class AppApplicantDocumentsComponent implements OnInit {
     artifact.isVerified = false;
     artifact.verifier = data.verifier;
     artifact.type = data.documentType;
+    let newArtifacts = [];
     this.appWeb3ArtifactSvc
       .create(artifact, this.ethAddress)
       .subscribe(
         artifact => {
           this.loading = false;
           console.log(artifact);
-          this.artifacts.push(artifact);
+          newArtifacts.push(artifact);
         },
         error => {
           this.loading = false;
           alert("Error while creating artifact: " + error);
-        }, () => this.loading = false);
+        }, () => {
+          this.loading = false;
+          this.artifacts = newArtifacts;
+        });
   }
 
   onDeleteClick() {

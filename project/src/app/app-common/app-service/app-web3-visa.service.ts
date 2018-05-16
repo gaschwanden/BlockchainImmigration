@@ -1,7 +1,8 @@
 import {Injectable} from '@angular/core';
 import {AppWeb3Service} from "./app-web3.service";
 import * as Visa from '../../../../build/contracts/Visa.json';
-import * as VisaRegistry from '../../../../build/contracts/VisaRegistry.json';
+import * as VisaFactory from '../../../../build/contracts/VisaFactory.json';
+
 import * as TruffleContract from 'truffle-contract';
 import {Observable} from "rxjs/Observable";
 import {VisaEntity} from "../app-domain/app-visa";
@@ -11,37 +12,40 @@ declare var window: any;
 @Injectable()
 export class AppWeb3VisaService {
   VISA = TruffleContract(Visa);
-  VISA_REGISTRY = TruffleContract(VisaRegistry);
+  VISA_FACTORY = TruffleContract(VisaFactory);
 
   constructor(private appWeb3Svc: AppWeb3Service) {
     console.log("Injecting the provider");
     this.VISA.setProvider(this.appWeb3Svc.currentProvider());
-    this.VISA_REGISTRY.setProvider(this.appWeb3Svc.currentProvider());
+    this.VISA_FACTORY.setProvider(this.appWeb3Svc.currentProvider());
+  }
+
+  visaFactory() {
+    return this.VISA_FACTORY
+      .deployed();
   }
 
   create(ethAddress: string, visaCode: string, visaName: string): Observable<any> {
     return Observable.create(observer => {
-      let visa;
-      this.VISA
-        .new(visaCode, visaName, {from: ethAddress})
-        .then(instance => {
-          visa = instance;
-          return this.VISA_REGISTRY.deployed()
+      let visaFactory;
+      this.visaFactory()
+        .then(factory => {
+          visaFactory = factory;
+          return factory.createVisa(visaCode, visaName, {from: ethAddress});
         })
-        .then(registry => registry.addVisa(visaCode, visa.address, {from: ethAddress}))
-        .then(result => observer.next(this.toVisaEntity(visa)))
+        .then(result => visaFactory.findBy(visaCode))
+        .then(address => observer.next(this.findOne(address)))
         .catch(error => observer.error(error));
     });
   }
 
   findAll(ethAddress: string): Observable<any> {
     return Observable.create(observer => {
-      this.VISA_REGISTRY
-        .deployed()
+      this.visaFactory()
         .then(registry => registry.findAll({from: ethAddress}))
         .then(addresses => {
           if (addresses.length > 0) {
-            addresses.forEach(address => observer.next(this.addressToVisaEntity(address)));
+            addresses.forEach(address => observer.next(this.findOne(address)));
           } else {
             observer.complete();
           }
@@ -52,20 +56,14 @@ export class AppWeb3VisaService {
 
   findBy(visaCode: string, ethAddress: string): Observable<any[]> {
     return Observable.create(observer => {
-      this.VISA_REGISTRY
-        .deployed()
-        .then(registry => {
-          registry.findBy(visaCode, {from: ethAddress})
-            .then(address => {
-              observer.next(this.addressToVisaEntity(address));
-            })
-            .catch(error => observer.error(error));
-        })
+      this.visaFactory()
+        .then(registry => registry.findBy(visaCode, {from: ethAddress}))
+        .then(address => observer.next(this.findOne(address)))
         .catch(error => observer.error(error));
     });
   }
 
-  private addressToVisaEntity(address: string): VisaEntity {
+  findOne(address: string): VisaEntity {
     let truffleVisa = this.VISA.at(address);
     return this.toVisaEntity(truffleVisa)
   }

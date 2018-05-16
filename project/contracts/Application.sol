@@ -9,11 +9,8 @@ contract Application is Owned {
   uint artifact_count;
 
   // constructors
-  function Application() public {
+  function Application(address _visa) public {
     owner = msg.sender;
-  }
-
-  function setVisa(address _visa) public onlyByOwner {
     visa_details = _visa;
   }
 

@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {AppWeb3Service} from "./app-web3.service";
 
 import * as Verifier from '../../../../build/contracts/Verifier.json';
-import * as VerifierRegistry from '../../../../build/contracts/VerifierRegistry.json';
+import * as VerifierFactory from '../../../../build/contracts/VerifierFactory.json';
 import * as TruffleContract from 'truffle-contract';
 import {Observable} from "rxjs/Observable";
 import {VerifierEntity} from "../app-domain/app-verifier";
@@ -11,20 +11,23 @@ declare var window: any;
 
 @Injectable()
 export class AppWeb3VerifierService {
-  VERIFIER_REGISTRY = TruffleContract(VerifierRegistry);
+  VERIFIER_FACTORY = TruffleContract(VerifierFactory);
   VERIFIER = TruffleContract(Verifier);
 
   constructor(private appWeb3Svc: AppWeb3Service) {
     console.log("Injecting the provider");
     this.VERIFIER.setProvider(this.appWeb3Svc.currentProvider());
-    this.VERIFIER_REGISTRY.setProvider(this.appWeb3Svc.currentProvider());
+    this.VERIFIER_FACTORY.setProvider(this.appWeb3Svc.currentProvider());
+  }
+
+  verifierFactory() {
+    return this.VERIFIER_FACTORY.deployed();
   }
 
   findArtifacts(verifierWalletAddress: string): Observable<any> {
     return Observable.create(observer => {
-      this.VERIFIER_REGISTRY
-        .deployed()
-        .then(registry => registry.findOne(verifierWalletAddress))
+      this.verifierFactory()
+        .then(factory => factory.findOne(verifierWalletAddress))
         .then(address => {
           let verifier = this.VERIFIER.at(address);
           return verifier.getArtifacts();
@@ -42,12 +45,11 @@ export class AppWeb3VerifierService {
 
   addArtifact(verifierWalletAddr: string, artifactAddress: string): Observable<any> {
     return Observable.create(observer => {
-      this.VERIFIER_REGISTRY
-        .deployed()
-        .then(registry => registry.findOne(verifierWalletAddr))
+      this.verifierFactory()
+        .then(factory => factory.findOne(verifierWalletAddr))
         .then(address => {
           let verifier = this.VERIFIER.at(address);
-          verifier.addArtifact(artifactAddress);
+          return verifier.addArtifact(artifactAddress);
         })
         .then(result => observer.next(true))
         .catch(error => observer.error(error));
@@ -56,9 +58,8 @@ export class AppWeb3VerifierService {
 
   checkStatus(ethAddress: string): Observable<boolean> {
     return Observable.create(observer => {
-      this.VERIFIER_REGISTRY
-        .deployed()
-        .then(registry => registry.findOne(ethAddress))
+      this.verifierFactory()
+        .then(factory => factory.findOne(ethAddress))
         .then(address => {
           if (address) {
             this.VERIFIER.at(address).status()
@@ -78,9 +79,8 @@ export class AppWeb3VerifierService {
 
   findOne(ethAddress: string): Observable<VerifierEntity> {
     return Observable.create(observer => {
-      this.VERIFIER_REGISTRY
-        .deployed()
-        .then(registry => registry.findOne(ethAddress))
+      this.verifierFactory()
+        .then(factory => factory.findOne(ethAddress))
         .then(address => {
           if (address) {
             observer.next(this.addressToVerifierEntity(address));
@@ -94,9 +94,8 @@ export class AppWeb3VerifierService {
 
   findAll(ethAddress: string): Observable<any> {
     return Observable.create(observer => {
-      this.VERIFIER_REGISTRY
-        .deployed()
-        .then(registry => registry.findAll({from: ethAddress}))
+      this.verifierFactory()
+        .then(factory => factory.findAll({from: ethAddress}))
         .then(addresses => {
           if (addresses.length > 0) {
             addresses.forEach(address => observer.next(this.addressToVerifierEntity(address)));
@@ -110,14 +109,15 @@ export class AppWeb3VerifierService {
 
   addVerifier(verifierEntity: VerifierEntity, ethAddress: string): Observable<boolean> {
     return Observable.create(observer => {
-      let verifier;
-      this.VERIFIER.new(verifierEntity.name, verifierEntity.wallet, verifierEntity.docTypes, {from: ethAddress})
-        .then(instance => {
-          verifier = instance;
-          return this.VERIFIER_REGISTRY.deployed();
+      let verifierFactory;
+      this.verifierFactory()
+        .then(factory => {
+          verifierFactory = factory;
+          return factory.createVerifier(verifierEntity.name, verifierEntity.wallet,
+            verifierEntity.docTypes, {from: ethAddress});
         })
-        .then(registry => registry.addVerifier(verifierEntity.wallet, verifier.address, {from: ethAddress}))
-        .then(result => observer.next(this.toVerifierEntity(verifier)))
+        .then(result => verifierFactory.findOne(verifierEntity.wallet))
+        .then(address => observer.next(this.addressToVerifierEntity(address)))
         .catch(error => observer.error(error));
     });
   }

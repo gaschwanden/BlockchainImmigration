@@ -22,29 +22,23 @@ export class AppWeb3ArtifactService {
     this.USER_ARTIFACTS.setProvider(this.appWeb3Svc.currentProvider());
   }
 
+  userArtifact() {
+    return this.USER_ARTIFACTS.deployed();
+  }
+
   create(artifactEntity: ArtifactEntity, ethAddress: string): Observable<any> {
     return Observable.create(observer => {
-      let truffleArtifact;
+      let userArtifact;
       //  //byte32 pName, bytes32 pLocation, address pVerifier, bytes32 pType
-      this.ARTIFACT
-        .new(artifactEntity.name, artifactEntity.ipfsHash, artifactEntity.verifier, artifactEntity.type, {
-          from: ethAddress
-        })
+      this.userArtifact()
         .then(instance => {
-          truffleArtifact = instance;
-          return this.USER_ARTIFACTS.deployed();
+          userArtifact = instance;
+          instance.createArtifact(artifactEntity.name,
+            artifactEntity.ipfsHash, artifactEntity.verifier,
+            artifactEntity.type, {from: ethAddress});
         })
-        .then(registry => registry.registerArtifact(truffleArtifact.address, {from: ethAddress}))
-        .then(result => {
-          this.appWeb3VerifierSvc.addArtifact(artifactEntity.verifier, truffleArtifact.address)
-            .subscribe(result => {
-              if (result) {
-                observer.next(this.toArtifactEntity(truffleArtifact));
-              } else {
-                observer.complete();
-              }
-            }, error => observer.error(error));
-        })
+        .then(result => userArtifact.findUserArtifacts(ethAddress))
+        .then(addresses => addresses.forEach(address => this.addressToArtifactEntity(address)))
         .catch(error => observer.error(error));
     });
   }
@@ -55,8 +49,7 @@ export class AppWeb3ArtifactService {
 
   findAll(ethAddress: string): Observable<ArtifactEntity> {
     return Observable.create(observer => {
-      this.USER_ARTIFACTS
-        .deployed()
+      this.userArtifact()
         .then(factory => factory.findUserArtifacts(ethAddress, {from: ethAddress}))
         .then(addresses => {
           if (addresses.length > 0) {
