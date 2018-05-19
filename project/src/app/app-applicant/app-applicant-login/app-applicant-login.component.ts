@@ -8,11 +8,14 @@ import {AppWeb3ApplicantRegistryService} from "../../app-common/app-service/app-
   styleUrls: ["./app-applicant-login.component.css"]
 })
 export class AppApplicantLoginComponent {
+  loading = false;
+
   constructor(private router: Router,
               private appWeb3ApplicantRegistrySvc: AppWeb3ApplicantRegistryService) {
   }
 
   onClickSubmit(data) {
+    this.loading = true;
     this.appWeb3ApplicantRegistrySvc.checkStatus(data.ethAddress)
       .subscribe(success => {
           if (success) {
@@ -22,8 +25,12 @@ export class AppApplicantLoginComponent {
           } else {
             alert("ETH Address is not registered as applicant.");
           }
+          this.loading = false;
         },
-        error => alert("User is not registered applicant: " + error));
+        error => {
+          this.loading = false;
+          alert("User is not registered applicant: " + error);
+        }, () => this.loading = false);
   }
 
 }

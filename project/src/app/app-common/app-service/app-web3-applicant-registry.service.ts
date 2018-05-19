@@ -9,61 +9,56 @@ declare var window: any;
 
 @Injectable()
 export class AppWeb3ApplicantRegistryService {
-  APPLICANT_REGISTRY = TruffleContract(ApplicantRegistry);
+	APPLICANT_REGISTRY = TruffleContract(ApplicantRegistry);
 
-  constructor(private appWeb3Svc: AppWeb3Service) {
-    console.log("Injecting the provider");
-    this.APPLICANT_REGISTRY.setProvider(this.appWeb3Svc.currentProvider());
-  }
+	constructor(private appWeb3Svc: AppWeb3Service) {
+		console.log("Injecting the provider");
+		this.APPLICANT_REGISTRY.setProvider(this.appWeb3Svc.currentProvider());
+	}
 
-  checkStatus(ethAddress: string): Observable<boolean> {
-    return Observable.create(observer => {
-      this.APPLICANT_REGISTRY
-        .deployed()
-        .then(registry => {
-          return registry.getApplicantStatus(ethAddress, {from: ethAddress});
-        })
-        .then(status => observer.next(status))
-        .catch(error => observer.error(error));
-    });
-  }
+	applicantRegistry() {
+		return this.APPLICANT_REGISTRY.deployed();
+	}
 
-  addApplicant(ethAddress: string): Observable<boolean> {
-    return Observable.create(observer => {
-      this.APPLICANT_REGISTRY
-        .deployed()
-        .then(registry => {
-          return registry.addApplicant(ethAddress, {from: ethAddress});
-        })
-        .then(result => observer.next(true))
-        .catch(error => observer.error(error));
-    });
-  }
+	checkStatus(ethAddress: string): Observable<boolean> {
+		return Observable.create(observer => {
+			this.applicantRegistry()
+				.then(registry => registry.getApplicantStatus(ethAddress, {from: ethAddress}))
+				.then(status => observer.next(status))
+				.catch(error => observer.error(error));
+		});
+	}
 
-  changeStatus(ethAddress: string, active: boolean): Observable<boolean> {
-    return Observable.create(observer => {
-      this.APPLICANT_REGISTRY
-        .deployed()
-        .then(registry => {
-          return registry.changeStatus(ethAddress, active, {from: ethAddress});
-        })
-        .then(result => observer.next(true))
-        .catch(error => observer.error(error));
-    });
-  }
+	addApplicant(ethAddress: string): Observable<boolean> {
+		return Observable.create(observer => {
+			this.applicantRegistry()
+				.then(registry => registry.addApplicant(ethAddress, {from: ethAddress}))
+				.then(result => observer.next(true))
+				.catch(error => observer.error(error));
+		});
+	}
 
-  findAll(ethAddress: string): Observable<any> {
-    return Observable.create(observer => {
-      this.APPLICANT_REGISTRY
-        .deployed()
-        .then(registry => {
-          const total = registry.applicantCount();
-          for (let i = 0; i < total; i++) {
-            registry.findOne(i)
-              .then(observer.next)
-              .catch(observer.error);
-          }
-        }).catch(observer.error);
-    });
-  }
+	changeStatus(ethAddress: string, active: boolean): Observable<boolean> {
+		return Observable.create(observer => {
+			this.applicantRegistry()
+				.then(registry => registry.changeStatus(ethAddress, active, {from: ethAddress}))
+				.then(result => observer.next(true))
+				.catch(error => observer.error(error));
+		});
+	}
+
+	findAll(ethAddress: string): Observable<any> {
+		return Observable.create(observer => {
+			this.applicantRegistry()
+				.then(registry => registry.getApplicants({from: ethAddress}))
+				.then(addresses => {
+					if (addresses.length > 0) {
+						addresses.forEach(address => observer.next(address));
+					} else {
+						observer.complete();
+					}
+				})
+				.catch(error => observer.error(error));
+		});
+	}
 }

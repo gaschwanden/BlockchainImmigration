@@ -5,5 +5,7 @@
 
 export const environment = {
   production: false,
-  HttpProvider: "http://localhost:7545"
+  docTypes: ['PROFESSIONAL', 'PERSONAL', 'OTHERS'],
+  HttpProvider: "http://localhost:7545",
+  IPFSProvider: "http://127.0.0.1:5001/api/v0"
 };

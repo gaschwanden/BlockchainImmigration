@@ -1,9 +1,9 @@
-pragma solidity ^0.4.0;
+pragma solidity ^0.4.21;
 
 import "./Owned.sol";
 
 contract ApplicantRegistry is Owned {
-  mapping(uint => address) public applicants;
+  address[] public applicants;
   mapping(address => bool) public applicant_status;
   uint public applicantCount;
 
@@ -12,7 +12,7 @@ contract ApplicantRegistry is Owned {
   }
 
   function addApplicant(address _newApplicant) public {
-    applicants[applicantCount] = _newApplicant;
+    applicants.push(_newApplicant) - 1;
     applicant_status[_newApplicant] = true;
     applicantCount++;
   }
@@ -21,11 +21,11 @@ contract ApplicantRegistry is Owned {
     applicant_status[_applicant] = _active;
   }
 
-  function getApplicantStatus(address _applicant) public constant returns (bool) {
+  function getApplicantStatus(address _applicant) public view returns (bool) {
     return applicant_status[_applicant];
   }
 
-  function findOne(uint idx) public constant returns (address){
-    return applicants[idx];
+  function getApplicants() public view returns (address[]) {
+    return applicants;
   }
 }
