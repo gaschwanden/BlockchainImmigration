@@ -24,13 +24,8 @@
           </div>
         </div>
       </div>
-      <div class="col-4">
-        <div class="card" style="width: 18rem;">
-          <img class="fas fa-plus-circle">
-          <div class="card-body">
-            <button type="button" class="btn btn-primary" (click)="onVerifyClick()">Verify</button>
-          </div>
-        </div>
+      <div *ngIf="artifacts.length < 0">
+        No documents found.
       </div>
     </div>
   </div>

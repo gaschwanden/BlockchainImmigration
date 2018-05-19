@@ -33,12 +33,12 @@ export class AppWeb3ArtifactService {
       this.userArtifact()
         .then(instance => {
           userArtifact = instance;
-          instance.createArtifact(artifactEntity.name,
+			return instance.createArtifact(artifactEntity.name,
             artifactEntity.ipfsHash, artifactEntity.verifier,
             artifactEntity.type, {from: ethAddress});
         })
         .then(result => userArtifact.findUserArtifacts(ethAddress))
-        .then(addresses => addresses.forEach(address => this.addressToArtifactEntity(address)))
+		  .then(addresses => addresses.forEach(address => observer.next(this.addressToArtifactEntity(address))))
         .catch(error => observer.error(error));
     });
   }

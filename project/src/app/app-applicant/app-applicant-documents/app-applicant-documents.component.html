@@ -58,7 +58,7 @@
                 <label for="verifier">Verifier</label>
                 <select class='select-option' id="verifier" name="verifier" ngModel
                         required #verifier="ngModel">
-                  <option class='option' *ngFor='let verifier of verifiers' [value]="verifier.wallet">
+                    <option class='option' *ngFor='let verifier of verifiers' [value]="verifier.address">
                     {{verifier.name}}
                   </option>
                 </select>
