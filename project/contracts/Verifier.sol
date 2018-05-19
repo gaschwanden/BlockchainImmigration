@@ -11,7 +11,7 @@ contract Verifier is Owned {
 
     // constructors
     function Verifier(bytes32 pName, address pWallet, bytes32[] pDocTypes) public {
-        owner = msg.sender;
+        owner = tx.origin;
         name = pName;
         wallet = pWallet;
         doc_types = pDocTypes;

@@ -9,7 +9,7 @@ contract Visa is Owned {
 
     // constructors
     function Visa(bytes32 _code, bytes32 _name) public {
-        owner = msg.sender;
+        owner = tx.origin;
         visa_code = _code;
         visa_name = _name;
         is_active = true;

@@ -77,4 +77,22 @@ export class AppApplicantDocumentsComponent implements OnInit {
 	onDeleteClick() {
 		// FIXME not sure if we want to expose delete on documents
 	}
+
+	onDepositClick(artifactAddress: string) {
+		this.loading = true;
+		this.appWeb3ArtifactSvc.depositVerifierFee(artifactAddress, this.ethAddress)
+			.subscribe(balance => {
+					let idx = this.artifacts
+						.findIndex(artifact => artifact.address === artifactAddress);
+					let artifact = this.artifacts[idx];
+					this.artifacts.splice(idx, 1);
+					artifact.verifierFee = balance;
+					this.artifacts.push(artifact);
+					this.loading = false;
+				},
+				error => {
+					this.loading = false;
+					alert("Unable to deposit verifier fee: " + error);
+				});
+	}
 }

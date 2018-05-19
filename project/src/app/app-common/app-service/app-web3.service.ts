@@ -47,6 +47,13 @@ export class AppWeb3Service {
     return this.web3.toDecimal(hex);
   }
 
+	toWei(amount: string): string {
+		return this.web3.toWei(amount, 'ether');
+	}
+
+	fromWei(amount: any): any {
+		return this.web3.fromWei(amount, 'ether');
+	}
 
   isAddress(ethAddress: string): boolean {
     if (this.web3) {

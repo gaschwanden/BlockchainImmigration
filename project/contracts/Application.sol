@@ -10,10 +10,14 @@ contract Application is Owned {
 
     // constructors
     function Application(address _visa, address[] _artifacts) public {
-        owner = msg.sender;
+        owner = tx.origin;
         visa_details = _visa;
         linked_artifacts = _artifacts;
         applicant = msg.sender;
+    }
+
+    function depositFee(uint _fee) public payable {
+        require(_fee == msg.value);
     }
 
     function addArtifact(address _artifact) public onlyByOwner {
@@ -24,8 +28,14 @@ contract Application is Owned {
         return linked_artifacts;
     }
 
-    function decision(bool _decision) public {
+    function decision(bool _decision) public payable {
         is_approved = _decision;
+        msg.sender.transfer(tx.gasprice * gasleft());
+        owner.transfer(address(this).balance);
+    }
+
+    function getBalance() public view returns (uint) {
+        return address(this).balance;
     }
 
     function withdraw() public onlyByOwner {

@@ -100,6 +100,12 @@
                         <p class="card-text">
                             Verifier: {{artifact.verifierName}} ({{artifact.verifier}})
                         </p>
+                        <p>Verifier Fee Paid: {{artifact.verifierFee}} ETH</p>
+                    </div>
+                    <div class="card-footer" *ngIf="!artifact.isVerified">
+                        <button class="btn btn-info"
+                                (click)="onDepositClick(artifact.address)">Deposit Verifier Fee
+                        </button>
                     </div>
                 </div>
             </div>
