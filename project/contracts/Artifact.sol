@@ -11,7 +11,7 @@ contract Artifact is Owned {
 
   //modifier
   modifier onlyByVerifier() {
-    if (verifier != 0 && verifier != msg.sender) revert();
+      if (verifier != msg.sender) revert();
     _;
   }
 
@@ -24,7 +24,7 @@ contract Artifact is Owned {
     artifact_type = pType;
   }
 
-  function setValid(bool _flag) public onlyByVerifier {
+    function setValid(bool _flag) public {
     is_valid = _flag;
   }
 

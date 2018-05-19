@@ -1,81 +1,92 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px' }"></ngx-loading>
 <div class="row">
-  <div class="col-3">
-    <div class="list-group">
-      <a href="/immigration/{{ethAddress}}/visas" class="list-group-item">Visas</a>
-      <a href="/immigration/{{ethAddress}}/applications" class="list-group-item">Applications</a>
-      <a href="/immigration/{{ethAddress}}/verifiers" class="list-group-item">Verifiers</a>
-    </div>
-  </div>
-  <div class="col-9">
-    <div class="row">
-      <div class="row">
-        <div class="col-lg">
-          <h2>Welcome {{ethAddress}} - {{role}}</h2>
+    <div class="col-3">
+        <div class="list-group">
+            <a href="/immigration/{{ethAddress}}/visas" class="list-group-item">Visas</a>
+            <a href="/immigration/{{ethAddress}}/applications" class="list-group-item">Applications</a>
+            <a href="/immigration/{{ethAddress}}/verifiers" class="list-group-item">Verifiers</a>
         </div>
-      </div>
     </div>
-    <div class="row">
-      <div class="col-4">
-        <div class="card" style="width: 18rem;">
-          <div class="card-body">
-            <form #addVerifierFrm="ngForm" (ngSubmit)="onAddClick(addVerifierFrm.value)" novalidate>
-              <div class="form-group">
-                <label for="verifierAddress">Verifier ETH Address (ERC-20 Compatible):</label>
-                <input type="text" class="form-control" id="verifierAddress" name="verifierAddress" ngModel
-                       required #verifierAddress="ngModel" invalidEthAddress>
-                <div *ngIf="verifierAddress.invalid && (verifierAddress.dirty || verifierAddress.touched)"
-                     class="alert alert-danger">
-                  <div *ngIf="verifierAddress.errors.required">
-                    ETH Address is required.
-                  </div>
-                  <div *ngIf="verifierAddress.errors.invalidEthAddress">
-                    ETH Address is invalid.
-                  </div>
+    <div class="col-9">
+        <div class="row">
+            <div class="row">
+                <div class="col-lg">
+                    <h2>Welcome {{ethAddress}} - {{role}}</h2>
                 </div>
-              </div>
-              <div class="form-group">
-                <label for="verifierName">Name:</label>
-                <input type="text" class="form-control" id="verifierName" name="verifierName" ngModel
-                       required #verifierName="ngModel">
-                <div *ngIf="verifierName.invalid && (verifierName.dirty || verifierName.touched)"
-                     class="alert alert-danger">
-                  <div *ngIf="verifierName.errors.required">
-                    First name is required.
-                  </div>
-                </div>
-              </div>
-              <div class="form-group">
-                <label>Document Type</label>
-                <div class="form-check" *ngFor="let docType of docTypes">
-                  <input type="checkbox" class="form-check-input" id="{{docType}}" name="{{docType}}"
-                         value="{{docType}}" ngModel>
-                  <label class="form-check-label" for="{{docType}}">{{docType}}</label>
-                </div>
-              </div>
-              <button type="submit" class="btn btn-default" [disabled]="!addVerifierFrm.form.valid">Add</button>
-            </form>
-          </div>
+            </div>
         </div>
-      </div>
-      <div class="col-4" *ngFor="let verifier of verifiers">
-        <div class="card" style="width: 18rem;">
-          <div class="card-body">
-            <h5 class="card-title">{{verifier.name}} - {{verifier.status ? 'Enabled' : 'Disabled'}}</h5>
-            <h6 class="card-subtitle mb-2 text-muted">{{verifier.wallet}}</h6>
-            <p class="card-text">Document Type</p>
-            <ul>
-              <li *ngFor="let docType of verifier.docTypes">{{docType}}</li>
-            </ul>
-            <button *ngIf="verifier.status" type="button" class="btn btn-danger"
-                    (click)="onStatusClick(verifier.address, false)">Disable
-            </button>
-            <button *ngIf="!verifier.status" type="button" class="btn btn-success"
-                    (click)="onStatusClick(verifier.address, true)">Enable
-            </button>
-          </div>
+        <div class="row">
+            <div class="col-4">
+                <div class="card" style="width: 18rem;">
+                    <form #addVerifierFrm="ngForm" (ngSubmit)="onAddClick(addVerifierFrm.value)" novalidate>
+                        <div class="card-header">
+                            <h5 class="card-title">Add Verifier</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="verifierAddress">Verifier ETH Address (ERC-20 Compatible):</label>
+                                <input type="text" class="form-control" id="verifierAddress" name="verifierAddress"
+                                       ngModel
+                                       required #verifierAddress="ngModel" invalidEthAddress>
+                                <div *ngIf="verifierAddress.invalid && (verifierAddress.dirty || verifierAddress.touched)"
+                                     class="alert alert-danger">
+                                    <div *ngIf="verifierAddress.errors.required">
+                                        ETH Address is required.
+                                    </div>
+                                    <div *ngIf="verifierAddress.errors.invalidEthAddress">
+                                        ETH Address is invalid.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="verifierName">Name:</label>
+                                <input type="text" class="form-control" id="verifierName" name="verifierName" ngModel
+                                       required #verifierName="ngModel">
+                                <div *ngIf="verifierName.invalid && (verifierName.dirty || verifierName.touched)"
+                                     class="alert alert-danger">
+                                    <div *ngIf="verifierName.errors.required">
+                                        First name is required.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Document Type</label>
+                                <div class="form-check" *ngFor="let docType of docTypes">
+                                    <input type="checkbox" class="form-check-input" id="{{docType}}" name="{{docType}}"
+                                           value="{{docType}}" ngModel>
+                                    <label class="form-check-label" for="{{docType}}">{{docType}}</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary" [disabled]="!addVerifierFrm.form.valid">Add
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-4" *ngFor="let verifier of verifiers">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-header">
+                        <h5>{{verifier.name}} - {{verifier.status ? 'Enabled' : 'Disabled'}}</h5>
+                    </div>
+                    <div class="card-body">
+                        <h6 class="card-subtitle mb-2 text-muted">{{verifier.wallet}}</h6>
+                        <p class="card-text">Document Type</p>
+                        <ul>
+                            <li *ngFor="let docType of verifier.docTypes">{{docType}}</li>
+                        </ul>
+                    </div>
+                    <div class="card-footer">
+                        <button *ngIf="verifier.status" type="button" class="btn btn-danger"
+                                (click)="onStatusClick(verifier.address, false)">Disable
+                        </button>
+                        <button *ngIf="!verifier.status" type="button" class="btn btn-success"
+                                (click)="onStatusClick(verifier.address, true)">Enable
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </div>

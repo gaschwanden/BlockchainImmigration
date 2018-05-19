@@ -26,7 +26,7 @@ export class AppVerifierDocumentsComponent implements OnInit {
       .findArtifacts(this.ethAddress)
       .subscribe(artifactAddress => {
           this.loading = false;
-          this.artifacts.push(this.appWeb3ArtifactSvc.addressToArtifactEntity(artifactAddress));
+			  this.artifacts.push(this.appWeb3ArtifactSvc.findOne(artifactAddress));
         },
         error => {
           this.loading = false;
@@ -38,7 +38,7 @@ export class AppVerifierDocumentsComponent implements OnInit {
   onVerifyClick(artifact: ArtifactEntity) {
     this.loading = true;
     this.appWeb3ArtifactSvc
-      .verify(artifact.address)
+		.verify(artifact.address, this.ethAddress)
       .subscribe(result => {
           this.loading = false;
           artifact.isVerified = true;

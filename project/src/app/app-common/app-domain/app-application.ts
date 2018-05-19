@@ -1,6 +1,10 @@
+import {VisaEntity} from "./app-visa";
+import {ArtifactEntity} from "./app-artifact";
+
 export class ApplicationEntity {
-  public name: string;
-  public docTypes: string[] = [];
-  public address: string;
-  public status: boolean;
+	public visa: VisaEntity;
+	public artifacts: ArtifactEntity[] = [];
+	public address: string;
+	public status: boolean;
+	public owner: string;
 }

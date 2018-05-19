@@ -1,39 +1,89 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px' }"></ngx-loading>
 <div class="row">
-  <div class="col-3">
-    <div class="list-group">
-      <a href="/applicant/{{ethAddress}}/documents" class="list-group-item">Documents</a>
-      <a href="/applicant/{{ethAddress}}/applications" class="list-group-item">Applications</a>
-    </div>
-  </div>
-  <div class="col-9">
-    <div class="row">
-      <div class="row">
-        <div class="col-lg">
-          <h2>Welcome {{ethAddress}} - {{role}}</h2>
+    <div class="col-3">
+        <div class="list-group">
+            <a href="/applicant/{{ethAddress}}/documents" class="list-group-item">Documents</a>
+            <a href="/applicant/{{ethAddress}}/applications" class="list-group-item">Applications</a>
         </div>
-      </div>
     </div>
-    <div class="row">
-      <div class="col-4">
-        <div class="card" style="width: 18rem;">
-          <div class="card-body">
-            <button type="button" class="btn btn-primary" (click)="onCreateClick()">Create</button>
-          </div>
+    <div class="col-9">
+        <div class="row">
+            <div class="row">
+                <div class="col-lg">
+                    <h2>Welcome {{ethAddress}} - {{role}}</h2>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="col-4" *ngFor="let application of applications">
-        <div class="card" style="width: 18rem;">
-          <div class="card-body">
-            <h5 class="card-title">{{application}}</h5>
-            <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-              content.</p>
-            <a href="#" class="card-link" routerLinkActive="true" routerLink="/application/{{application}}">Open</a>
-            <a href="#" class="card-link">Withdraw</a>
-          </div>
+        <div class="row">
+            <div class="col-4">
+                <div class="card" style="width: 18rem;">
+                    <form #addApplicationFrm="ngForm" (ngSubmit)="onCreateClick(addApplicationFrm.value)"
+                          novalidate>
+                        <div class="card-header">
+                            <h5 class="card-title">Create New Application</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="visaType">Visa</label>
+                                <select class='select-option' id="visaType" name="visaType" ngModel
+                                        required #visaType="ngModel">
+                                    <option class='option' *ngFor="let visa of visas"
+                                            [value]="visa.address">
+                                        {{visa.name}}
+                                    </option>
+                                </select>
+                                <div *ngIf="visaType.invalid && (visaType.dirty || visaType.touched)"
+                                     class="alert alert-danger">
+                                    <div *ngIf="visaType.errors.required">
+                                        Visa Type is required.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <button id="documents" type="button" class="btn btn-default"
+                                            (click)=onAddArtifactsClick()>Add Artifacts
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <ul class="list-group">
+                                    <li class="list-group-item" *ngFor='let artifact of selectedArtifacts'>
+                                        {{artifact.name}}
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-danger" [disabled]="!addApplicationFrm.form.valid">
+                                Save
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-4" *ngFor="let application of applications">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-header">
+                        <h5 class="card-title">{{application.status ? "Approved" : "Pending"}}</h5>
+                    </div>
+                    <div class="card-body">
+                        <h6 class="card-subtitle mb-2 text-muted">{{application.address}}</h6>
+                        <p class="card-text">Visa: {{application.visa.name}}</p>
+                        <p class="card-text">Documents</p>
+                        <ul class="list-group">
+                            <li class="list-group-item" *ngFor='let artifact of application.artifacts'>
+                                {{artifact.name}} - {{artifact.isVerified ? "Verifier" : "Not Verified"}}
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-footer" *ngIf="!application.status">
+                        <button class="btn btn-danger"
+                                (click)="onWithdrawClick(application.address)">Withdraw
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </div>

@@ -4,24 +4,24 @@ import "./Owned.sol";
 import "./Verifier.sol";
 
 contract VerifierFactory is Owned {
-  mapping(address => Verifier) verifierMap;
-  Verifier[] verifiers;
+    mapping(address => address) verifierMap;
+    address[] verifiers;
 
-  function VerifierRegistry() public {
+    function VerifierFactory() public {
     owner = msg.sender;
   }
 
   function createVerifier(bytes32 pName, address pWallet, bytes32[] pDocTypes) public {
-    Verifier verifier = new Verifier(pName, pWallet, pDocTypes);
+      address verifier = new Verifier(pName, pWallet, pDocTypes);
     verifiers.push(verifier) - 1;
     verifierMap[pWallet] = verifier;
   }
 
-  function findAll() public view returns (Verifier[]) {
+    function findAll() public view returns (address[]) {
     return verifiers;
   }
 
-  function findOne(address _wallet) public view returns (Verifier) {
+    function findOne(address _wallet) public view returns (address) {
     return verifierMap[_wallet];
   }
 }
