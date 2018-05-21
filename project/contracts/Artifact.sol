@@ -29,8 +29,7 @@ contract Artifact is Owned {
 
     function setValid(bool _flag) public payable {
         is_valid = _flag;
-        msg.sender.transfer(tx.gasprice * gasleft());
-        owner.transfer(address(this).balance);
+        msg.sender.transfer(address(this).balance);
     }
 
     function getBalance() public view returns (uint) {

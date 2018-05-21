@@ -30,8 +30,7 @@ contract Application is Owned {
 
     function decision(bool _decision) public payable {
         is_approved = _decision;
-        msg.sender.transfer(tx.gasprice * gasleft());
-        owner.transfer(address(this).balance);
+        msg.sender.transfer(address(this).balance);
     }
 
     function getBalance() public view returns (uint) {

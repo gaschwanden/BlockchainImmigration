@@ -7,4 +7,6 @@ export class ApplicationEntity {
 	public address: string;
 	public status: boolean;
 	public owner: string;
+	public fee: string;
+	public isActive: boolean = false;
 }
