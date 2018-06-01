@@ -4,8 +4,10 @@
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
 export const environment = {
-  production: false,
-  docTypes: ['PROFESSIONAL', 'PERSONAL', 'OTHERS'],
-  HttpProvider: "http://localhost:7545",
-  IPFSProvider: "http://127.0.0.1:5001/api/v0"
+	production: false,
+	docTypes: ['PROFESSIONAL', 'PERSONAL', 'OTHERS'],
+	documentVerifierFee: "0.01",
+	applicationFee: "0.01",
+	HttpProvider: "http://localhost:7545",
+	IPFSProvider: "http://127.0.0.1:5001/api/v0/",
 };

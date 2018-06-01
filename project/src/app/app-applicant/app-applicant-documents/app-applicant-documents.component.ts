@@ -4,6 +4,7 @@ import {environment} from "../../../environments/environment";
 import {ArtifactEntity} from "../../app-common/app-domain/app-artifact";
 import {AppWeb3VerifierService} from "../../app-common/app-service/app-web3-verifier.service";
 import {VerifierEntity} from "../../app-common/app-domain/app-verifier";
+import {AppIpfsService} from "../../app-common/app-service/app-web3-ipfs.service";
 
 @Component({
 	selector: 'app-app-applicant-dashboard',
@@ -17,9 +18,11 @@ export class AppApplicantDocumentsComponent implements OnInit {
 	docTypes: string[];
 	loading = false;
 	verifiers: VerifierEntity[] = [];
+	file: File;
 
 	constructor(private appWeb3ArtifactSvc: AppWeb3ArtifactService,
-				private addWeb3VerifierSvc: AppWeb3VerifierService) {
+				private addWeb3VerifierSvc: AppWeb3VerifierService,
+				private appIpfsSvc: AppIpfsService) {
 		this.ethAddress = localStorage.getItem('ethAddress');
 		this.role = localStorage.getItem('role');
 		this.docTypes = environment.docTypes;
@@ -51,30 +54,58 @@ export class AppApplicantDocumentsComponent implements OnInit {
 		this.loading = true;
 		let artifact = new ArtifactEntity();
 		artifact.name = data.documentName;
-		artifact.ipfsHash = "test";
 		artifact.isVerified = false;
 		artifact.verifier = data.verifier;
 		artifact.type = data.documentType;
-		this.appWeb3ArtifactSvc
-			.create(artifact, this.ethAddress)
-			.subscribe(
-				artifact => {
-					this.loading = false;
-					console.log(artifact);
-					let idx = this.artifacts.findIndex(existing => existing.address === artifact.address);
-					if (idx === -1) {
-						this.artifacts.push(artifact);
-					}
-				},
-				error => {
-					this.loading = false;
-					alert("Error while creating artifact: " + error);
-				}, () => {
-					this.loading = false;
-				});
+		this.appIpfsSvc.add(this.file)
+			.subscribe(response => {
+				artifact.ipfsHash = "test";//response.hash;
+				this.appWeb3ArtifactSvc
+					.create(artifact, this.ethAddress)
+					.subscribe(
+						artifact => {
+							this.loading = false;
+							console.log(artifact);
+							let idx = this.artifacts.findIndex(existing => existing.address === artifact.address);
+							if (idx === -1) {
+								this.artifacts.push(artifact);
+							}
+						},
+						error => {
+							this.loading = false;
+							alert("Error while creating artifact: " + error);
+						}, () => {
+							this.loading = false;
+						});
+			}, error => {
+				this.loading = false;
+				alert("Unable to upload the document to IPFS: " + error);
+			});
 	}
 
 	onDeleteClick() {
 		// FIXME not sure if we want to expose delete on documents
+	}
+
+	onDepositClick(artifactAddress: string) {
+		this.loading = true;
+		this.appWeb3ArtifactSvc.depositVerifierFee(artifactAddress, this.ethAddress)
+			.subscribe(balance => {
+					let idx = this.artifacts
+						.findIndex(artifact => artifact.address === artifactAddress);
+					let artifact = this.artifacts[idx];
+					this.artifacts.splice(idx, 1);
+					artifact.verifierFee = balance;
+					this.artifacts.push(artifact);
+					this.loading = false;
+				},
+				error => {
+					this.loading = false;
+					alert("Unable to deposit verifier fee: " + error);
+				});
+	}
+
+	changeListener(target): void {
+		this.file = target.files[0];
 	}
 }

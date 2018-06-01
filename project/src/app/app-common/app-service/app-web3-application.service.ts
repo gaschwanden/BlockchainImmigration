@@ -9,6 +9,7 @@ import {ApplicationEntity} from "../app-domain/app-application";
 import {AppWeb3ArtifactService} from "./app-web3-artifact.service";
 import {AppWeb3VisaService} from "./app-web3-visa.service";
 import {AppWeb3ApplicantRegistryService} from "./app-web3-applicant-registry.service";
+import {environment} from "../../../environments/environment";
 
 @Injectable()
 export class AppWeb3ApplicationService {
@@ -54,16 +55,25 @@ export class AppWeb3ApplicationService {
 	findOne(applicationAddress: string): ApplicationEntity {
 		let truffleApplication = this.APPLICATION.at(applicationAddress);
 		let application = new ApplicationEntity();
+		truffleApplication.owner()
+			.then(owner => application.isActive = (typeof owner === "string"))
+			.catch(error => {
+				application.isActive = false;
+				console.error("Unable to get status of the application: " + error);
+			});
 		truffleApplication.getArtifacts()
 			.then(addresses => application.artifacts = addresses.map(address =>
 				this.appWeb3ArtifactSvc.findOne(address)))
-			.catch(error => console.error("Unable to get artifacts for the application", error));
+			.catch(error => console.error("Unable to get artifacts for the application: " + error));
 		truffleApplication.visa_details()
 			.then(address => application.visa = this.appWeb3VisaSvc.findOne(address))
-			.catch(error => console.error("Unable to get visa for the application", error));
+			.catch(error => console.error("Unable to get visa for the application: " + error));
 		truffleApplication.is_approved()
 			.then(approved => application.status = approved)
-			.catch(error => console.error("Unable to get status of the application", error));
+			.catch(error => console.error("Unable to get status of the application: " + error));
+		truffleApplication.getBalance()
+			.then(value => application.fee = this.appWeb3Svc.fromWei(value))
+			.catch(error => console.log("Unable to get the application fee: " + error));
 		application.address = applicationAddress;
 		return application;
 	}
@@ -116,6 +126,21 @@ export class AppWeb3ApplicationService {
 			let truffleApplication = this.APPLICATION.at(appAddress);
 			truffleApplication.withdraw({from: ethAddress})
 				.then(result => observer.next(appAddress))
+				.catch(error => observer.error(error));
+		});
+	}
+
+	depositApplicationFee(applicationAddress: string, ethAddress: string): Observable<any> {
+		return Observable.create(observer => {
+			let truffleApplication = this.APPLICATION.at(applicationAddress);
+			let feeInWei = this.appWeb3Svc.toWei(environment.applicationFee);
+			truffleApplication.depositFee.sendTransaction(feeInWei, {
+				from: ethAddress,
+				to: applicationAddress,
+				value: feeInWei
+			})
+				.then(reciept => this.APPLICATION.at(applicationAddress).getBalance())
+				.then(balance => observer.next(this.appWeb3Svc.fromWei(balance)))
 				.catch(error => observer.error(error));
 		});
 	}

@@ -52,7 +52,7 @@ export class AppApplicantApplicationsComponent implements OnInit {
 					this.loading = false;
 					console.error("Unable to find all application: " + error);
 					alert(error);
-					this.applications = [];
+					// this.applications = [];
 				}, () => this.loading = false);
 	}
 
@@ -72,7 +72,7 @@ export class AppApplicantApplicationsComponent implements OnInit {
 				if (idx >= 0) {
 					this.applications.splice(idx, 1);
 				}
-			})
+			}, error => alert("Unable to withdraw: " + error))
 	}
 
 	onCreateClick(data) {
@@ -102,5 +102,23 @@ export class AppApplicantApplicationsComponent implements OnInit {
 					this.loading = false;
 				},
 				() => this.loading = false);
+	}
+
+	onDepositClick(applicationAddress: string) {
+		this.loading = true;
+		this.appWeb3ApplicationSvc.depositApplicationFee(applicationAddress, this.ethAddress)
+			.subscribe(balance => {
+					let idx = this.applications
+						.findIndex(application => application.address === applicationAddress);
+					let application: ApplicationEntity = this.applications[idx];
+					this.applications.splice(idx, 1);
+					application.fee = balance;
+					this.applications.push(application);
+					this.loading = false;
+				},
+				error => {
+					this.loading = false;
+					alert("Unable to deposit verifier fee: " + error);
+				});
 	}
 }

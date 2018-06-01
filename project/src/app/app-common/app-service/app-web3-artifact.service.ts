@@ -7,8 +7,7 @@ import * as TruffleContract from 'truffle-contract';
 import {Observable} from "rxjs/Observable";
 import {ArtifactEntity} from "../app-domain/app-artifact";
 import {AppWeb3VerifierService} from "./app-web3-verifier.service";
-
-declare var window: any;
+import {environment} from "../../../environments/environment";
 
 @Injectable()
 export class AppWeb3ArtifactService {
@@ -24,6 +23,21 @@ export class AppWeb3ArtifactService {
 
 	userArtifact() {
 		return this.USER_ARTIFACTS.deployed();
+	}
+
+	depositVerifierFee(artifactAddress: string, ethAddress: string): Observable<any> {
+		return Observable.create(observer => {
+			let truffleArtifact = this.ARTIFACT.at(artifactAddress);
+			let feeInWei = this.appWeb3Svc.toWei(environment.documentVerifierFee);
+			truffleArtifact.depositVerifierFee.sendTransaction(feeInWei, {
+				from: ethAddress,
+				to: artifactAddress,
+				value: feeInWei
+			})
+				.then(reciept => this.ARTIFACT.at(artifactAddress).getBalance())
+				.then(balance => observer.next(this.appWeb3Svc.fromWei(balance)))
+				.catch(error => observer.error(error));
+		});
 	}
 
 	create(artifactEntity: ArtifactEntity, ethAddress: string): Observable<any> {
@@ -92,6 +106,9 @@ export class AppWeb3ArtifactService {
 		truffleArtifact.artifact_type()
 			.then(value => artifact.type = this.appWeb3Svc.toString(value))
 			.catch(error => console.log("Unable to get the type of the artifact: " + error));
+		truffleArtifact.getBalance()
+			.then(value => artifact.verifierFee = this.appWeb3Svc.fromWei(value))
+			.catch(error => console.log("Unable to get the verifier fee for the artifact: " + error));
 		artifact.address = truffleArtifact.address;
 		return artifact;
 	}
