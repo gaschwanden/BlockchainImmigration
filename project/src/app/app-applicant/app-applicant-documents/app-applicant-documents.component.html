@@ -36,7 +36,7 @@
                             <div class="form-group">
                                 <label for="document">Document</label>
                                 <input type="file" id="document" name="document" ngModel
-                                       required #document="ngModel">
+                                       required #document="ngModel" (change)="changeListener($event.target)">
                                 <div *ngIf="document.invalid && (document.dirty || document.touched)"
                                      class="alert alert-danger">
                                     <div *ngIf="document.errors.required">

@@ -27,6 +27,8 @@ import {AppImmigrationVisasComponent} from "./app-immigration/app-immigration-vi
 import {LoadingModule} from "ngx-loading";
 import {BootstrapModalModule} from 'ng2-bootstrap-modal';
 import {AppApplicantAddDocumentsComponent} from './app-applicant/app-applicant-add-documents/app-applicant-add-documents.component';
+import {AppIpfsService} from "./app-common/app-service/app-web3-ipfs.service";
+import {HttpClientModule} from "@angular/common/http";
 
 const APP_ROUTES: Routes = [
 	{path: '', component: AppHomeComponent},
@@ -67,6 +69,7 @@ const APP_ROUTES: Routes = [
 		AppApplicantAddDocumentsComponent
 	],
 	imports: [
+		HttpClientModule,
 		RouterModule.forRoot(
 			APP_ROUTES,
 			{enableTracing: true} // <-- debugging purposes only
@@ -77,13 +80,15 @@ const APP_ROUTES: Routes = [
 		BootstrapModalModule.forRoot({container: document.body})
 	],
 	providers: [
+		HttpClientModule,
 		AppWeb3Service,
 		AppWeb3ArtifactService,
 		AppWeb3ApplicationService,
 		AppWeb3AdminRegistryService,
 		AppWeb3ApplicantRegistryService,
 		AppWeb3VerifierService,
-		AppWeb3VisaService
+		AppWeb3VisaService,
+		AppIpfsService
 	],
 	entryComponents: [
 		AppApplicantAddDocumentsComponent

@@ -9,5 +9,5 @@ export const environment = {
 	documentVerifierFee: "0.01",
 	applicationFee: "0.01",
 	HttpProvider: "http://localhost:7545",
-	IPFSProvider: "http://127.0.0.1:5001/api/v0"
+	IPFSProvider: "http://127.0.0.1:5001/api/v0/",
 };
