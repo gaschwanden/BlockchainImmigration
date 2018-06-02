@@ -1,6 +1,6 @@
 export const environment = {
 	production: true,
-	docTypes: ['IMAGE', 'PDF', 'DOC', 'CSV', 'TEXT'],
+	docTypes: ["text/plain", "text/csv", "image/jpeg", "image/png", "image/gif", "image/png", "image/svg+xml", "image/tiff", "application/pdf", "application/msword", "application/rtf"],
 	documentVerifierFee: "0.01",
 	applicationFee: "0.01",
 	HttpProvider: "",

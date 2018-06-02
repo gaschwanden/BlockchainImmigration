@@ -69,10 +69,10 @@ export class AppApplicantDocumentsComponent implements OnInit {
 			}, () => this.loading = false);
 	}
 
-	onIpfsClick(name: string, multihash: string) {
+	onIpfsClick(name: string, multihash: string, type: string) {
 		this.appIpfsSvc.get(multihash)
 			.subscribe(file => {
-					let blob = new Blob([file.content], {type: "application/octet-stream"});
+					let blob = new Blob([file.content], {type: type});
 					importedSaveAs(blob, name)
 				},
 				error => alert("Unable to get IPFS file: " + error)
