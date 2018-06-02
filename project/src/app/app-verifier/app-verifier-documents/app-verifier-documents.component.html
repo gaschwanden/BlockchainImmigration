@@ -1,6 +1,11 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px' }"></ngx-loading>
 <div class="row">
     <div class="col-9">
+        <div class="row text-center" *ngIf="artifacts.length <= 0">
+            <div class="alert alert-danger" role="alert">
+                No artifacts for verification!
+            </div>
+        </div>
         <div class="row">
             <div class="col-4" *ngFor="let artifact of artifacts">
                 <div class="card" style="width: 18rem;">

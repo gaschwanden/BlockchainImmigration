@@ -8,6 +8,11 @@
         </div>
     </div>
     <div class="col-9">
+        <div class="row text-center" *ngIf="applications.length <= 0">
+            <div class="alert alert-danger" role="alert">
+                No applications found!
+            </div>
+        </div>
         <div class="row">
             <div class="col-4" *ngFor="let application of applications">
                 <div class="card" style="width: 18rem;">
