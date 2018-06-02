@@ -60,6 +60,7 @@ export class AppApplicantDocumentsComponent implements OnInit {
 		artifact.type = data.documentType;
 		this.appIpfsSvc.add(this.file)
 			.subscribe(response => {
+				this.loading = false;
 				artifact.ipfsHash = response.hash;
 				this.createArtifact(artifact);
 			}, error => {
@@ -79,6 +80,7 @@ export class AppApplicantDocumentsComponent implements OnInit {
 	}
 
 	createArtifact(artifact: ArtifactEntity) {
+		this.loading = true;
 		this.appWeb3ArtifactSvc
 			.create(artifact, this.ethAddress)
 			.subscribe(
