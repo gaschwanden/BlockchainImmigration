@@ -5,6 +5,7 @@ import {ArtifactEntity} from "../../app-common/app-domain/app-artifact";
 import {AppWeb3VerifierService} from "../../app-common/app-service/app-web3-verifier.service";
 import {VerifierEntity} from "../../app-common/app-domain/app-verifier";
 import {AppIpfsService} from "../../app-common/app-service/app-web3-ipfs.service";
+import {saveAs as importedSaveAs} from "file-saver";
 
 @Component({
 	selector: 'app-app-applicant-dashboard',
@@ -59,28 +60,41 @@ export class AppApplicantDocumentsComponent implements OnInit {
 		artifact.type = data.documentType;
 		this.appIpfsSvc.add(this.file)
 			.subscribe(response => {
-				artifact.ipfsHash = "test";//response.hash;
-				this.appWeb3ArtifactSvc
-					.create(artifact, this.ethAddress)
-					.subscribe(
-						artifact => {
-							this.loading = false;
-							console.log(artifact);
-							let idx = this.artifacts.findIndex(existing => existing.address === artifact.address);
-							if (idx === -1) {
-								this.artifacts.push(artifact);
-							}
-						},
-						error => {
-							this.loading = false;
-							alert("Error while creating artifact: " + error);
-						}, () => {
-							this.loading = false;
-						});
+				artifact.ipfsHash = response.hash;
+				this.createArtifact(artifact);
 			}, error => {
 				this.loading = false;
 				alert("Unable to upload the document to IPFS: " + error);
-			});
+			}, () => this.loading = false);
+	}
+
+	onIpfsClick(name: string, multihash: string) {
+		this.appIpfsSvc.get(multihash)
+			.subscribe(file => {
+					let blob = new Blob([file.content], {type: "application/octet-stream"});
+					importedSaveAs(blob, name)
+				},
+				error => alert("Unable to get IPFS file: " + error)
+			);
+	}
+
+	createArtifact(artifact: ArtifactEntity) {
+		this.appWeb3ArtifactSvc
+			.create(artifact, this.ethAddress)
+			.subscribe(
+				artifact => {
+					this.loading = false;
+					let idx = this.artifacts.findIndex(existing => existing.address === artifact.address);
+					if (idx === -1) {
+						this.artifacts.push(artifact);
+					}
+				},
+				error => {
+					this.loading = false;
+					alert("Error while creating artifact: " + error);
+				}, () => {
+					this.loading = false;
+				});
 	}
 
 	onDeleteClick() {

@@ -17,7 +17,8 @@
                     <div class="card-body">
                         <h6 class="card-subtitle mb-2 text-muted">{{artifact.address}}</h6>
                         <p class="card-text">
-                            IPFS Hash: {{artifact.ipfsHash}}
+                            IPFS Hash: <a href="javascript:void(0)"
+                                          (click)="onIpfsClick(artifact.name, artifact.ipfsHash)">{{artifact.ipfsHash}}</a>
                         </p>
                         <p class="card-text">
                             Type: {{artifact.type}}

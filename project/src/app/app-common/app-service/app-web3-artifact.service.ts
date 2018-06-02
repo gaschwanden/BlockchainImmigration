@@ -47,8 +47,10 @@ export class AppWeb3ArtifactService {
 			this.userArtifact()
 				.then(instance => {
 					userArtifact = instance;
+					let multihash = this.appWeb3Svc.getBytes32FromMultiash(artifactEntity.ipfsHash);
 					return instance.createArtifact(artifactEntity.name,
-						artifactEntity.ipfsHash, artifactEntity.verifier,
+						multihash.digest, multihash.hashFunction, multihash.size,
+						artifactEntity.verifier,
 						artifactEntity.type, {from: ethAddress});
 				})
 				.then(result => userArtifact.findUserArtifacts(ethAddress))
@@ -90,8 +92,8 @@ export class AppWeb3ArtifactService {
 		truffleArtifact.name()
 			.then(value => artifact.name = this.appWeb3Svc.toString(value))
 			.catch(error => console.log("Unable to get the name of the artifact: " + error));
-		truffleArtifact.getUrl()
-			.then(value => artifact.ipfsHash = this.appWeb3Svc.toString(value))
+		truffleArtifact.getIpfs()
+			.then(values => artifact.ipfsHash = this.appWeb3Svc.getMultihashFromBytes32(values))
 			.catch(error => console.log("Unable to get the IPFS hash of the artifact: " + error));
 		truffleArtifact.is_valid()
 			.then(value => artifact.isVerified = value)

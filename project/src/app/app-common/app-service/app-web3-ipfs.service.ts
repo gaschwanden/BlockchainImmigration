@@ -6,11 +6,24 @@ import {Buffer} from "buffer"
 
 @Injectable()
 export class AppIpfsService {
-	uri: string = environment.IPFSProvider;
 	ipfs: any;
 
 	constructor() {
-		this.ipfs = ipfsAPI('localhost', '5001', {protocol: 'http'});
+		this.ipfs = ipfsAPI(environment.IPFSHost, environment.IPFSPort, {protocol: 'http'});
+	}
+
+	get(multihash: string): Observable<any> {
+		return Observable.create(observer => {
+			this.ipfs.files.get(multihash, function (err, files) {
+				if (err) {
+					observer.error(err);
+				} else {
+					files.forEach((file) => {
+						observer.next(file);
+					})
+				}
+			})
+		});
 	}
 
 	add(fileToUpload: File): Observable<any> {
@@ -18,7 +31,13 @@ export class AppIpfsService {
 			let that = this;
 			let reader: FileReader = new FileReader();
 			reader.onloadend = function (e) {
-				that.ipfs.files.add(Buffer.from(reader.result), (err, res) => {
+				const files = [
+					{
+						path: fileToUpload.name,
+						content: Buffer.from(reader.result)
+					}
+				];
+				that.ipfs.files.add(files, (err, res) => {
 					if (err) {
 						observer.error(err);
 					} else {
