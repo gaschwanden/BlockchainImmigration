@@ -5,7 +5,7 @@
 
 export const environment = {
 	production: false,
-	docTypes: ['PROFESSIONAL', 'PERSONAL', 'OTHERS'],
+	docTypes: ['IMAGE', 'PDF', 'DOC', 'CSV', 'TEXT'],
 	documentVerifierFee: "0.01",
 	applicationFee: "0.01",
 	HttpProvider: "http://localhost:7545",

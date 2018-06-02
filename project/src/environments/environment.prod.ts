@@ -1,6 +1,6 @@
 export const environment = {
 	production: true,
-	docTypes: ['PROFESSIONAL', 'PERSONAL', 'OTHERS'],
+	docTypes: ['IMAGE', 'PDF', 'DOC', 'CSV', 'TEXT'],
 	documentVerifierFee: "0.01",
 	applicationFee: "0.01",
 	HttpProvider: "",
