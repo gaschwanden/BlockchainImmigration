@@ -5,9 +5,10 @@
 
 export const environment = {
 	production: false,
-	docTypes: ['PROFESSIONAL', 'PERSONAL', 'OTHERS'],
+	docTypes: ["text/plain", "text/csv", "image/jpeg", "image/png", "image/gif", "image/png", "image/svg+xml", "image/tiff", "application/pdf", "application/msword", "application/rtf"],
 	documentVerifierFee: "0.01",
 	applicationFee: "0.01",
 	HttpProvider: "http://localhost:7545",
-	IPFSProvider: "http://127.0.0.1:5001/api/v0/",
+	IPFSHost: "127.0.0.1",
+	IPFSPort: 5001
 };

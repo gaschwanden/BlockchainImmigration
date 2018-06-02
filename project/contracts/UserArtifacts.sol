@@ -11,8 +11,8 @@ contract UserArtifacts is Owned {
         owner = msg.sender;
     }
 
-    function createArtifact(bytes32 pName, bytes32 pLocation, address pVerifier, bytes32 pType) public {
-        address artifact = new Artifact(pName, pLocation, pVerifier, pType);
+    function createArtifact(bytes32 pName, bytes32 pDigest, uint pHashFunction, uint pSize, address pVerifier, bytes32 pType) public {
+        address artifact = new Artifact(pName, pDigest, pHashFunction, pSize, pVerifier, pType);
         user_artifacts[msg.sender].push(artifact) - 1;
         Verifier verifier = Verifier(pVerifier);
         verifier.addArtifact(artifact);

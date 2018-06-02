@@ -9,13 +9,6 @@
     </div>
     <div class="col-9">
         <div class="row">
-            <div class="row">
-                <div class="col-lg">
-                    <h2>Welcome {{ethAddress}} - {{role}}</h2>
-                </div>
-            </div>
-        </div>
-        <div class="row">
             <div class="col-4">
                 <div class="card" style="width: 18rem;">
                     <form #addVerifierFrm="ngForm" (ngSubmit)="onAddClick(addVerifierFrm.value)" novalidate>
@@ -49,14 +42,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label>Document Type</label>
-                                <div class="form-check" *ngFor="let docType of docTypes">
-                                    <input type="checkbox" class="form-check-input" id="{{docType}}" name="{{docType}}"
-                                           value="{{docType}}" ngModel>
-                                    <label class="form-check-label" for="{{docType}}">{{docType}}</label>
-                                </div>
-                            </div>
                         </div>
                         <div class="card-footer">
                             <button type="submit" class="btn btn-primary" [disabled]="!addVerifierFrm.form.valid">Add
@@ -72,10 +57,6 @@
                     </div>
                     <div class="card-body">
                         <h6 class="card-subtitle mb-2 text-muted">{{verifier.wallet}}</h6>
-                        <p class="card-text">Document Type</p>
-                        <ul>
-                            <li *ngFor="let docType of verifier.docTypes">{{docType}}</li>
-                        </ul>
                     </div>
                     <div class="card-footer">
                         <button *ngIf="verifier.status" type="button" class="btn btn-danger"

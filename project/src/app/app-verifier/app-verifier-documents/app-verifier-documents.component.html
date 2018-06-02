@@ -1,11 +1,11 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px' }"></ngx-loading>
 <div class="row">
-    <div class="col-lg">
-        <h2>Welcome {{ethAddress}} - {{role}}</h2>
-    </div>
-</div>
-<div class="row">
     <div class="col-9">
+        <div class="row text-center" *ngIf="artifacts.length <= 0">
+            <div class="alert alert-danger" role="alert">
+                No artifacts for verification!
+            </div>
+        </div>
         <div class="row">
             <div class="col-4" *ngFor="let artifact of artifacts">
                 <div class="card" style="width: 18rem;">
@@ -17,7 +17,8 @@
                     <div class="card-body">
                         <h6 class="card-subtitle mb-2 text-muted">{{artifact.address}}</h6>
                         <p class="card-text">
-                            IPFS Hash: {{artifact.ipfsHash}}
+                            IPFS Hash: <a href="javascript:void(0)"
+                                          (click)="onIpfsClick(artifact.name, artifact.ipfsHash)">{{artifact.ipfsHash}}</a>
                         </p>
                         <p class="card-text">
                             Type: {{artifact.type}}

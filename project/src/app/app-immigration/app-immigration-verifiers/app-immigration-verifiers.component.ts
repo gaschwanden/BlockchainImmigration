@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {AppWeb3VerifierService} from "../../app-common/app-service/app-web3-verifier.service";
 import {VerifierEntity} from "../../app-common/app-domain/app-verifier";
-import {environment} from "../../../environments/environment";
 
 @Component({
   selector: 'app-app-immigration-verifiers',
@@ -13,12 +12,10 @@ export class AppImmigrationVerifiersComponent implements OnInit {
   ethAddress: string;
   loading = false;
   role: string;
-  docTypes: string[];
 
   constructor(private appWeb3VerifierSvc: AppWeb3VerifierService) {
     this.ethAddress = localStorage.getItem("ethAddress");
     this.role = localStorage.getItem('role');
-    this.docTypes = environment.docTypes;
   }
 
   ngOnInit() {
@@ -31,7 +28,7 @@ export class AppImmigrationVerifiersComponent implements OnInit {
           this.verifiers.push(verifier);
         },
         error => {
-          alert("Unable to find verifiers: " + error)
+			alert("Unable to find verifiers: " + error);
           this.loading = false;
         },
         () => this.loading = false);
@@ -42,11 +39,6 @@ export class AppImmigrationVerifiersComponent implements OnInit {
     let verifier = new VerifierEntity();
     verifier.name = data.verifierName;
     verifier.wallet = data.verifierAddress;
-    this.docTypes.forEach(docType => {
-      if (data[docType] === true) {
-        verifier.docTypes.push(docType);
-      }
-    });
     this.appWeb3VerifierSvc
       .addVerifier(verifier, this.ethAddress)
       .subscribe(verifier => {
